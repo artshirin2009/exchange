@@ -2,41 +2,22 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 
-var dotenv = require("dotenv").config();
+var dotenv = require('dotenv').config();
 var jwt = require('jsonwebtoken');
 
+var indexRouter = require('./routes/index');
 
-
-var publicRouter = require("./routes/public/index");
-var privateRouter = require("./routes/private/index");
-
-require("./config/validateuser");
-
-const mongoose = require("mongoose");
-mongoose.connect(
-  `${process.env.DB_URL}${process.env.DB_NAME}`,
-  {
-    useNewUrlParser: true
-  },
-  function(err) {
-    if (err) throw err;
-    console.log("Successfully connected");
-  }
-); 
+require('./config/validateuser');
+require('./config/database');
 
 var app = express();
+
 app.set('secretKey', 'nodeRestApi'); // jwt secret token
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
-
-
-app.use('/',publicRouter);
-app.use('/',privateRouter);
-
-
-
-
+app.use('/', indexRouter);
 
 module.exports = app;
