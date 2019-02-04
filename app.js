@@ -10,6 +10,7 @@ var jwt = require('jsonwebtoken');
 var publicRouter = require("./routes/public/index");
 var privateRouter = require("./routes/private/index");
 
+require("./config/validateuser");
 
 const mongoose = require("mongoose");
 mongoose.connect(
@@ -35,18 +36,7 @@ app.use('/',publicRouter);
 app.use('/',privateRouter);
 
 
-function validateUser(req, res, next) {
-  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
-    console.log(req.headers['x-access-token'])
-    if (err) {
-      res.json({ status: "error", message: err.message, data: null });
-    } else {
-      // add user id to request
-      req.body.userId = decoded.id;
-      next();
-    }
-  })
-}
+
 
 
 module.exports = app;
