@@ -18,7 +18,7 @@ var upload = multer({ storage: storage });
 var mongoose = require('mongoose');
 
 /* GET user. */
-router.get('/',function (req, res, next) {
+router.get('/', validateUser,function (req, res, next) {
   console.log('/')
   User.find({}, function (err, users) {
     if (err) {
@@ -58,7 +58,18 @@ router.post(
   });
 
 
-
+  function validateUser(req, res, next) {
+    jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+      console.log(req.headers['x-access-token'])
+      if (err) {
+        res.json({ status: "error", message: err.message, data: null });
+      } else {
+        // add user id to request
+        req.body.userId = decoded.id;
+        next();
+      }
+    })
+  }
 
 
 

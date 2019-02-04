@@ -16,7 +16,7 @@ var upload = multer({ storage: storage });
 var mongoose = require('mongoose');
 
 /**Profile page + uploading images */
-router.get('/profile/:id', function (req, res, next) {
+router.get('/profile/:id', validateUser, function (req, res, next) {
   console.log('profile')
   var userId = req.params.id;
   User.findOne({ _id: userId }, function (err, obj) {
@@ -52,5 +52,18 @@ router.post(
 
   }
 );
+
+function validateUser(req, res, next) {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+    console.log(req.headers['x-access-token'])
+    if (err) {
+      res.json({ status: "error", message: err.message, data: null });
+    } else {
+      // add user id to request
+      req.body.userId = decoded.id;
+      next();
+    }
+  })
+}
 
 module.exports = router;

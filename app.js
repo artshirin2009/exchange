@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use('/',publicRouter);
-app.use('/', validateUser,privateRouter);
+app.use('/',privateRouter);
 
 
 function validateUser(req, res, next) {
