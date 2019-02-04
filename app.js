@@ -3,11 +3,13 @@ var express = require('express');
 var path = require('path');
 
 var dotenv = require("dotenv").config();
+var jwt = require('jsonwebtoken');
 
 
 
+var publicRouter = require("./routes/public/index");
+var privateRouter = require("./routes/private/index");
 
-var indexRouter = require("./routes/index");
 
 const mongoose = require("mongoose");
 mongoose.connect(
@@ -29,8 +31,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-app.use('/',indexRouter);
+app.use('/',publicRouter);
+app.use('/', validateUser,privateRouter);
 
+
+function validateUser(req, res, next) {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+    console.log(req.headers['x-access-token'])
+    if (err) {
+      res.json({ status: "error", message: err.message, data: null });
+    } else {
+      // add user id to request
+      req.body.userId = decoded.id;
+      next();
+    }
+  })
+}
 
 
 module.exports = app;
