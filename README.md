@@ -10,9 +10,9 @@ npm install
 
 Routes:
 
-http://localhost:3000/registration
-http://localhost:3000/login
-http://localhost:3000/updateUser
+http://localhost:3000/registration  </br>
+http://localhost:3000/login 
+http://localhost:3000/updateUser 
 http://localhost:3000/                               -  secured route
 http://localhost:3000/profile/:id                    -  secured route
 
