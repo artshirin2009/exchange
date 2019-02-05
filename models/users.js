@@ -12,13 +12,21 @@ var userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
     required: true
   },
   name: {
+    type: String
+  },
+  isAdmin: {
+    type: String,
+    default:false
+  },
+  token:{
     type: String
   }
 });
