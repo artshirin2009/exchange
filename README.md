@@ -11,7 +11,14 @@ npm install</br></br>
 Routes:</br></br>
 
 http://localhost:3000/registration  </br>
+Form   - Form Url Encoded </br>
+Header - Content-Type - application/x-www-form-urlencoded  </br></br>
+
+
 http://localhost:3000/login </br>
+
+
+
 http://localhost:3000/updateUser </br>
 http://localhost:3000/                               -  secured route</br>
 http://localhost:3000/profile/:id                    -  secured route</br></br>
