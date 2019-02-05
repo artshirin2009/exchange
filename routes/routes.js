@@ -1,21 +1,18 @@
 var User = require('../models/users');
 var jwt = require('jsonwebtoken');
-var mongoose = require('mongoose')
-
+var mongoose = require('mongoose');
 
 module.exports = {
-    getProfile: function (req, res, next) {
-    
-      var userId = req.params.id;
-    User.findOne({ _id: userId }, function (err, obj) {
+  getProfile: function(req, res, next) {
+    var userId = req.params.id;
+    User.findOne({ _id: userId }, function(err, obj) {
       if (err) res.json(err);
       res.json(obj);
     });
-    
   },
-  updateUser: function (req, res, next) {
+  updateUser: function(req, res, next) {
     var userId = req.body.id;
-    User.findOne({ _id: userId }, function (err, user) {
+    User.findOne({ _id: userId }, function(err, user) {
       if (err) res.json(err);
       if (req.file) {
         user.imagePath = req.file.path.slice(15);
@@ -29,52 +26,52 @@ module.exports = {
       if (req.body.password) {
         user.password = req.body.password;
       }
-      
+
       if (req.body.isAdmin) {
         user.isAdmin = req.body.isAdmin;
       }
-      user.save(function (err, user) {
+      user.save(function(err, user) {
         if (err) return res.json(err);
         res.json(user);
       });
     });
   },
 
-
-
-  getUsers: function (req, res, next) {
-    
-    User.find({}, function (err, users) {
+  getUsers: function(req, res, next) {
+    User.find({}, function(err, users) {
       if (err) {
         console.log(err);
       }
       res.json(users);
     });
   },
-  
-  login: function (req, res, next) {
-    User.findOne({ email: req.body.email }, function (err, user) {
+
+  login: function(req, res, next) {
+    User.findOne({ email: req.body.email }, function(err, user) {
       if (err) res.json(err);
-      const token = jwt.sign({ email: user.email }, req.app.get('secretKey'), {
-        expiresIn: '24h'
-      });
-      if(user!=null){
+      jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
         res.json({
-        status: 'success',
-        message: 'user found!!!',
-        token
+          token
+        });
       });
-      }
-      else{
-        res.json('User is not found')
-      }      
     });
   },
-  registration: function (req, res, next) {
-    User.findOne({ email: req.body.email }, function (err, user) {
+  postProfile: function(req, res) {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+      if (err) {
+        res.sendStatus(403);
+      } else {
+        res.json({
+          message: 'Post created...',
+          authData
+        });
+      }
+    });
+  },
+  registration: function(req, res, next) {
+    User.findOne({ email: req.body.email }, function(err, user) {
       if (err) res.json(err);
       if (user === null) {
-        
         var user = {
           _id: new mongoose.Types.ObjectId(),
           email: req.body.email,
@@ -82,35 +79,19 @@ module.exports = {
           name: req.body.name
         };
         var newUser = new User(user);
-        newUser.save(function (err, user) {
+        newUser.save(function(err, user) {
           res.json(user);
-        })
+        });
+      } else {
+        res.json('User with this email already exists');
       }
-      else {
-        res.json('User with this email already exists')
-      }
-    }
-    );
+    });
   },
-  deleteUser: function(req, res, next){
-    User.findOne({email: req.body.email}, function(err, user){
-      user.remove(function (err, user) {
+  deleteUser: function(req, res, next) {
+    User.findOne({ email: req.body.email }, function(err, user) {
+      user.remove(function(err, user) {
         res.json('User succesfully deleted');
       });
-    })
-  },
-  profileTest: function(req, res, next){
-    var email = req.body.email;
-
-    User.findOne({email:email}, function (err, user) {
-      
-      if (err) {
-        console.log(err);
-      }
-      if (user.role){
-        res.json(user)
-      }
-      else{res.json('You do not have an access')}
     });
   }
 };

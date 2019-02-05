@@ -24,7 +24,7 @@ var userSchema = new Schema({
   },
   isAdmin: {
     type: String,
-    default:false
+    default: false
   }
 });
 
