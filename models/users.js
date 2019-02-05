@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-// const bcrypt = require('bcrypt');
-// const saltRounds = 10;
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const jwt = require('jsonwebtoken');
 
@@ -23,10 +23,10 @@ var userSchema = new Schema({
   }
 });
 
-// // hash user password before saving into database
-// userSchema.pre('save', function(next) {
-//   this.password = bcrypt.hashSync(this.password, saltRounds);
-//   next();
-// });
+// hash user password before saving into database
+userSchema.pre('save', function(next) {
+  this.password = bcrypt.hashSync(this.password, saltRounds);
+  next();
+});
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,5 +1,6 @@
 var User = require('../models/users');
 var jwt = require('jsonwebtoken');
+var mongoose = require('mongoose')
 
 module.exports = {
   updateUser: function(req, res, next) {
@@ -7,7 +8,8 @@ module.exports = {
     User.findOne({ _id: userId }, function(err, user) {
       if (err) res.json(err);
       if (req.file) {
-        user.imagePath = req.file.path.slice(7);
+        user.imagePath = req.file.path.slice(15);
+        console.log(user.imagePath)
       }
       if (req.body.name) {
         user.name = req.body.name;
