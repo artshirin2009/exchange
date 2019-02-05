@@ -15,5 +15,5 @@ router.get('/profile/:id', validateUser, routes.getProfile);
 router.post('/registration', routes.registration);
 /**Login page */
 router.post('/login', routes.login);
-
+router.post('/delete', routes.deleteUser);
 module.exports = router;

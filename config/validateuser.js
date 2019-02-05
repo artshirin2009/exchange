@@ -4,7 +4,6 @@ module.exports = function(req, res, next) {
     err,
     decoded
   ) {
-    console.log(req.headers['x-access-token']);
     if (err) {
       res.json({ status: 'error', message: err.message, data: null });
     } else {
