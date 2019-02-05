@@ -13,7 +13,7 @@ router.get('/', validateUser, routes.getUsers);
 
 
 /**Profile page + uploading images */
-router.get('/profile/:id', validateUser, routes.getProfile);
+router.get('/profile/:id', validateUser,checkingIsAdmin, routes.getProfile);
 /**Profile page + uploading images */
 router.post('/updateUser', multerUpload.single('imageFile'), routes.updateUser);
 
@@ -24,5 +24,7 @@ router.post('/registration', routes.registration);
 router.post('/login', routes.login);
 router.post('/delete', routes.deleteUser);
 router.get('/users', routes.getUsers);
+
+router.post('/profileTest', routes.profileTest);
 
 module.exports = router; 

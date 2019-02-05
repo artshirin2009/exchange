@@ -6,13 +6,11 @@ var mongoose = require('mongoose')
 module.exports = {
     getProfile: function (req, res, next) {
     
-    if (isAdmin){
       var userId = req.params.id;
     User.findOne({ _id: userId }, function (err, obj) {
       if (err) res.json(err);
       res.json(obj);
     });
-    }
     
   },
   updateUser: function (req, res, next) {
@@ -57,18 +55,19 @@ module.exports = {
   login: function (req, res, next) {
     User.findOne({ email: req.body.email }, function (err, user) {
       if (err) res.json(err);
+      const token = jwt.sign({ email: user.email }, req.app.get('secretKey'), {
+        expiresIn: '24h'
+      });
       if(user!=null){
         res.json({
         status: 'success',
         message: 'user found!!!',
-        
+        token
       });
       }
       else{
         res.json('User is not found')
-      }
-      
-      
+      }      
     });
   },
   registration: function (req, res, next) {
@@ -82,11 +81,6 @@ module.exports = {
           password: req.body.password,
           name: req.body.name
         };
-        const token = jwt.sign({ email: user.email }, req.app.get('secretKey'), {
-          expiresIn: '24h'
-        });
-        user.token = token;
-        console.log(user.token);
         var newUser = new User(user);
         newUser.save(function (err, user) {
           res.json(user);
@@ -104,6 +98,19 @@ module.exports = {
         res.json('User succesfully deleted');
       });
     })
+  },
+  profileTest: function(req, res, next){
+    var email = req.body.email;
+
+    User.findOne({email:email}, function (err, user) {
+      
+      if (err) {
+        console.log(err);
+      }
+      if (user.role){
+        res.json(user)
+      }
+      else{res.json('You do not have an access')}
+    });
   }
-  
 };
