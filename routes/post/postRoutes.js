@@ -3,11 +3,13 @@ var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 
 module.exports = {
+  /**All posts */
   getAllPosts: function (req, res, next) {
     Post.find({}, function (err, posts) {
       res.json(posts)
     })
   },
+  /**Create post */
   createPost: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
@@ -21,7 +23,7 @@ module.exports = {
               title: req.body.title,
               image: req.file.path.slice(15),
               description: req.body.description,
-              created_user: authData.user.name
+              created_user: authData.user._id
             };
             var newPost = new Post(post);
             newPost.save(function (err, post) {
@@ -32,16 +34,15 @@ module.exports = {
             res.json('Post exists')
           }
         })
-
       }
     });
   },
+  /**Edit post*/
   editPost: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
         res.sendStatus(403);
       } else {
-        console.log(authData)
         if (authData.user.isAdmin) {
           var id = req.body.id;
           Post.findByIdAndUpdate(id, {
@@ -50,8 +51,23 @@ module.exports = {
             image: req.file.path.slice(15),
           }, function (err, doc) { res.json('Post edited') })
         }
-        else{res.json('You can edit only your posts')}
-
+        else if (!authData.user.isAdmin) {
+          var id = req.body.id;
+          Post.findOne({ _id: id }, function (err, doc) {
+            if (err) res.json(err);
+            if (doc.created_user === authData.user._id) {
+              if (req.body.title) {
+                doc.title = req.body.title;
+              }
+              doc.save(function (err, doc) {
+                if (err) return res.json(err);
+                  res.json(doc);
+              });
+            }
+            else { res.json('You can edit only your posts') }
+          })
+        }
+        else { res.json('You can edit only your posts') }
       }
     });
   },
