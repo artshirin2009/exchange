@@ -99,7 +99,6 @@ module.exports = {
       if (err) {
         res.sendStatus(403);
       } else {
-        console.log(authData)
         if (authData.user.isAdmin) {
           User.find({}, function (err, users) {
             if (err) {
@@ -135,8 +134,35 @@ module.exports = {
       
     });
   },
-  empty: function (req, res, next) {
+  /**Start test route (GET) */
+  start: function (req, res, next) {
     res.json('Hi')
+  },
+  /**Update profiles (for admins) (POST)*/
+  updateProfilesForAdmin: function (req, res, next) {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+      if (err) {
+        res.sendStatus(403);
+      } else {
+        var userEmail = req.body.email;
+        User.findOne({ email: userEmail }, function (err, user) {
+          if (err) res.json(err);
+          if (req.file) {
+            user.imagePath = req.file.path.slice(15);
+          }
+          if (req.body.name) {
+            user.name = req.body.name;
+          }
+          if (req.body.password) {
+            user.password = req.body.password;
+          }
+          user.save(function (err, user) {
+            if (err) return res.json(err);
+            res.json('User edited successfully');
+          });
+        });
+      }
+    })
   }
 };
 
