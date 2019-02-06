@@ -38,3 +38,14 @@ router.post('/update-profiles',
 router.get('/all-users', verifyToken, routes.getAllUsers);
 /**Delete user */
 router.post('/delete', verifyToken, routes.deleteUser);
+
+Post routes</br></br>
+
+/**All posts */
+router.get('/', routes.getAllPosts);
+
+/**Create post */
+router.post('/create-post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
+
+/**Edit post admin*/
+router.post('/edit-post', verifyToken,multerUpload.single('imageFile'), routes.editPost);
