@@ -53,7 +53,6 @@ module.exports = {
       } else {
         var userId = authData.user._id;
         User.findOne({ _id: userId }, function (err, user) {
-          console.log(user)
           if (err) res.json(err);
           if (req.file) {
             user.imagePath = req.file.path.slice(15);
@@ -75,7 +74,7 @@ module.exports = {
       }
     })
   },
-  /**Get profile all users (only if isAdmin:true) */
+  /**Get profile all users (only if isAdmin:true) (GET)*/
   getAllUsers: function (req, res) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
@@ -94,9 +93,8 @@ module.exports = {
           });
         }
         else {
-          res.sendStatus(401).send("Sorry! You can't see that.");
+          res.sendStatus(401)
         }
-
       }
     });
   },

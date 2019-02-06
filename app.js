@@ -12,7 +12,6 @@ var jwt = require('jsonwebtoken');
 
 var indexRouter = require('./routes/index');
 
-require('./config/validateuser');
 require('./config/database');
 
 var app = express();

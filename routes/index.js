@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var validateUser = require('../config/validateuser');
 var verifyToken = require('../config/verifyToken');
 var mongoose = require('mongoose');
 var multerUpload = require('../config/file-upload');
