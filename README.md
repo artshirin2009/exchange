@@ -8,7 +8,7 @@ git clone https://github.com/artshirin2009/cubex-routes.git</br></br>
 
 npm install</br></br>
 
-Routes:</br></br>
+Routes:</br>
 
 /**Empty route */
 router.get('/', routes.start);
@@ -39,7 +39,7 @@ router.get('/all-users', verifyToken, routes.getAllUsers);
 /**Delete user */
 router.post('/delete', verifyToken, routes.deleteUser);
 
-Post routes</br></br>
+Post routes</br>
 
 /**All posts */
 router.get('/', routes.getAllPosts);
