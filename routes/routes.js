@@ -26,14 +26,31 @@ module.exports = {
   },
   /**Login users (POST)*/
   login: function (req, res, next) {
+
+
+
+
+
     User.findOne({ email: req.body.email }, function (err, user) {
-      if (err) res.json(err);
-      jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
-        res.json({
-          token
+
+      var comparePass = bcrypt.compareSync(req.body.password, user.password)
+
+      if (comparePass) {
+        if (err) { res.json(err) };
+        jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+          res.json({
+            token
+          });
         });
-      });
+      }
+      else{
+        res.sendStatus(403);
+      }
+
     });
+
+
+
   },
   /**User profile (GET)*/
   getProfile: function (req, res) {
