@@ -60,7 +60,7 @@ module.exports = {
       } else {
         res.json(authData.user)
       }
-    });
+    }); 
   },
   /**Update profile (+images) (POST)*/
   updateProfile: function (req, res, next) {
@@ -85,7 +85,9 @@ module.exports = {
           }
           user.save(function (err, user) {
             if (err) return res.json(err);
-            res.json(user);
+            jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+              res.json([user,token]);
+            });
           });
         });
       }
@@ -115,13 +117,26 @@ module.exports = {
       }
     });
   },
-  // /**Delete user */
-  // deleteUser: function (req, res, next) {
-  //   User.findOne({ email: req.body.email }, function (err, user) {
-  //     user.remove(function (err, user) {
-  //       res.json('User succesfully deleted');
-  //     });
-  //   });
-  // }
+  /**Delete user */
+  deleteUser: function (req, res, next) {
+    User.findOne({ email: req.body.email }, function (err, user) {
+      if (err){
+        
+      }
+      if(user==null){
+        console.log()
+        res.json('No user with such email')
+      }
+      else{
+        user.remove(function (err, user) {
+        res.json('User succesfully deleted');
+      });
+      }
+      
+    });
+  },
+  empty: function (req, res, next) {
+    res.json('Hi')
+  }
 };
 

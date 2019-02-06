@@ -7,6 +7,10 @@ var multerUpload = require('../config/file-upload');
 var routes = require('./routes');
 
 
+
+/**Registration */
+router.get('/', routes.empty);
+
 /**Registration */
 router.post('/registration', routes.registration);
 
@@ -24,8 +28,10 @@ router.post('/updateProfile',
 
 /**Get profile all users (only if isAdmin:true) */
 router.get('/all-users', verifyToken, routes.getAllUsers);
+/**Delete user */
+router.post('/delete', verifyToken, routes.deleteUser);
 
-//router.post('/delete', routes.deleteUser);
+
 
 
 module.exports = router;
