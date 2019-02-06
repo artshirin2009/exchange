@@ -10,10 +10,13 @@ var routes = require('./postRoutes');
 router.get('/', routes.getAllPosts);
 
 /**Create post */
-router.post('/', routes.createPost);
+router.post('/create-post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
 
-// /**Edit post */
-// router.get('/', routes.getAllPosts);
+/**Edit post admin*/
+router.post('/edit-post', verifyToken,multerUpload.single('imageFile'), routes.editPost);
+
+/**Edit post admin*/
+router.post('/edit-post', verifyToken,multerUpload.single('imageFile'), routes.editPost);
 
 // /**Delete post */
 // router.get('/', routes.getAllPosts);
