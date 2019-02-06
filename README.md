@@ -8,34 +8,44 @@ git clone https://github.com/artshirin2009/cubex-routes.git</br></br>
 
 npm install</br></br>
 
-Routes:</br></br>
+Routes:</br>
 
-http://localhost:4000/registration  </br>
-Form   - Form Url Encoded </br>
-Header - Content-Type - application/x-www-form-urlencoded  </br></br>
+/**Empty route */
+router.get('/', routes.start);
 
+/**Registration */
+router.post('/registration', routes.registration);
 
-http://localhost:4000/login </br>
-Form - Form Url Encoded </br>
-fields - email </br>
-Header - Content-Type - application/x-www-form-urlencoded  </br></br>
+/**Login page */
+router.post('/login', routes.login);
 
+/**Get profile page */
+router.get('/get-profile', verifyToken, routes.getProfile);
 
-http://localhost:4000/updateUser </br>
-Form - Multipart Form </br>
-fields: </br>
-  id </br>
-  email </br>
-  imageFile </br>
-  name </br>
-  password </br>
-Header - Content-Type - multipart/form-data  </br></br>
+/**Update profile (+images) */
+router.post('/update-profile',
+    verifyToken,
+    multerUpload.single('imageFile'),
+    routes.updateProfile);
 
-http://localhost:4000/                               -  secured route</br>
+/**Update profiles (only for admin) */
+router.post('/update-profiles',
+    verifyToken,
+    multerUpload.single('imageFile'),
+    routes.updateProfilesForAdmin);
 
+/**Get profile all users (only if isAdmin:true) */
+router.get('/all-users', verifyToken, routes.getAllUsers);
+/**Delete user */
+router.post('/delete', verifyToken, routes.deleteUser);
 
+Post routes</br>
 
-http://localhost:4000/profile/:id                    -  secured route</br></br>
+/**All posts */
+router.get('/', routes.getAllPosts);
 
+/**Create post */
+router.post('/create-post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
 
-get images: http://localhost:4000/uploads/*file_name*
+/**Edit post admin*/
+router.post('/edit-post', verifyToken,multerUpload.single('imageFile'), routes.editPost);
