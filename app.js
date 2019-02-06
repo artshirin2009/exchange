@@ -10,7 +10,8 @@ var cors = require('cors')
 var dotenv = require('dotenv').config();
 var jwt = require('jsonwebtoken');
 
-var indexRouter = require('./routes/index');
+var userRouter = require('./routes/user/user');
+var userPosts = require('./routes/post/post');
 
 require('./config/database');
 
@@ -24,7 +25,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 
+app.use('/posts', userPosts);
+app.use('/', userRouter);
 
-app.use('/', indexRouter);
+
 
 module.exports = app;

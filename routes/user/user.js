@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var verifyToken = require('../config/verifyToken');
+var verifyToken = require('../../config/verifyToken');
 var mongoose = require('mongoose');
-var multerUpload = require('../config/file-upload');
+var multerUpload = require('../../config/file-upload');
 //var bcrypt = require('bcrypt')
-var routes = require('./routes');
+var routes = require('./userRoutes');
 
 
 
@@ -26,7 +26,7 @@ router.post('/update-profile',
     multerUpload.single('imageFile'),
     routes.updateProfile);
 
-/**Update profile (+images) */
+/**Update profiles (only for admin) */
 router.post('/update-profiles',
     verifyToken,
     multerUpload.single('imageFile'),
@@ -41,13 +41,3 @@ router.post('/delete', verifyToken, routes.deleteUser);
 
 
 module.exports = router;
-
-
-// bcrypt.compare(req.body.password, 10, function (err, res) {
-//     console.log(res)
-//     if (res) {
-//       next()
-//     } else {
-//       res.json(err)
-//     }
-//   })

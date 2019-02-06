@@ -1,4 +1,4 @@
-var User = require('../models/users');
+var User = require('../../models/user');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt')
@@ -26,15 +26,8 @@ module.exports = {
   },
   /**Login users (POST)*/
   login: function (req, res, next) {
-
-
-
-
-
     User.findOne({ email: req.body.email }, function (err, user) {
-
       var comparePass = bcrypt.compareSync(req.body.password, user.password)
-
       if (comparePass) {
         if (err) { res.json(err) };
         jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
@@ -46,11 +39,7 @@ module.exports = {
       else{
         res.sendStatus(403);
       }
-
     });
-
-
-
   },
   /**User profile (GET)*/
   getProfile: function (req, res) {
@@ -119,8 +108,7 @@ module.exports = {
   /**Delete user */
   deleteUser: function (req, res, next) {
     User.findOne({ email: req.body.email }, function (err, user) {
-      if (err){
-        
+      if (err){        
       }
       if(user==null){
         console.log()
@@ -131,8 +119,7 @@ module.exports = {
         res.json('User succesfully deleted');
       });
       }
-      
-    });
+      });
   },
   /**Start test route (GET) */
   start: function (req, res, next) {
@@ -163,6 +150,6 @@ module.exports = {
         });
       }
     })
-  }
+  },  
 };
 
