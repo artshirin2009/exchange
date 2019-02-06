@@ -10,7 +10,7 @@ npm install</br></br>
 
 Routes:</br></br>
 
-/**Registration */
+/**Empty route */
 router.get('/', routes.start);
 
 /**Registration */
