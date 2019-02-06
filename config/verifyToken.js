@@ -2,7 +2,6 @@ var jwt = require('jsonwebtoken');
 module.exports = function(req, res, next) {
   // Get auth header value
   const bearerHeader = req.headers['x-access-token'];
-  console.log(bearerHeader);
     // Check if bearer is undefined
   if (typeof bearerHeader !== 'undefined') {
     // Split at the space
