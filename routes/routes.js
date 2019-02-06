@@ -1,18 +1,19 @@
 var User = require('../models/users');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt')
 
 module.exports = {
-  getProfile: function(req, res, next) {
+  getProfile: function (req, res, next) {
     var userId = req.params.id;
-    User.findOne({ _id: userId }, function(err, obj) {
+    User.findOne({ _id: userId }, function (err, obj) {
       if (err) res.json(err);
       res.json(obj);
     });
   },
-  updateUser: function(req, res, next) {
+  updateUser: function (req, res, next) {
     var userId = req.body.id;
-    User.findOne({ _id: userId }, function(err, user) {
+    User.findOne({ _id: userId }, function (err, user) {
       if (err) res.json(err);
       if (req.file) {
         user.imagePath = req.file.path.slice(15);
@@ -30,15 +31,15 @@ module.exports = {
       if (req.body.isAdmin) {
         user.isAdmin = req.body.isAdmin;
       }
-      user.save(function(err, user) {
+      user.save(function (err, user) {
         if (err) return res.json(err);
         res.json(user);
       });
     });
   },
 
-  getUsers: function(req, res, next) {
-    User.find({}, function(err, users) {
+  getUsers: function (req, res, next) {
+    User.find({}, function (err, users) {
       if (err) {
         console.log(err);
       }
@@ -46,8 +47,8 @@ module.exports = {
     });
   },
 
-  login: function(req, res, next) {
-    User.findOne({ email: req.body.email }, function(err, user) {
+  login: function (req, res, next) {
+    User.findOne({ email: req.body.email }, function (err, user) {
       if (err) res.json(err);
       jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
         res.json({
@@ -55,21 +56,39 @@ module.exports = {
         });
       });
     });
+
+
+
+
   },
-  postProfile: function(req, res) {
+  postProfile: function (req, res) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
         res.sendStatus(403);
       } else {
-        res.json({
-          message: 'Post created...',
-          authData
-        });
+        if (authData.user.isAdmin) {
+          User.find({}, function (err, users) {
+            if (err) {
+              console.log(err);
+            }
+            res.json({
+              message: 'You are admin...',
+              users
+            });
+          });
+        }
+        else {
+          res.json({
+            message: 'You are user...',
+            authData
+          });
+        }
+
       }
     });
   },
-  registration: function(req, res, next) {
-    User.findOne({ email: req.body.email }, function(err, user) {
+  registration: function (req, res, next) {
+    User.findOne({ email: req.body.email }, function (err, user) {
       if (err) res.json(err);
       if (user === null) {
         var user = {
@@ -79,7 +98,7 @@ module.exports = {
           name: req.body.name
         };
         var newUser = new User(user);
-        newUser.save(function(err, user) {
+        newUser.save(function (err, user) {
           res.json(user);
         });
       } else {
@@ -87,11 +106,12 @@ module.exports = {
       }
     });
   },
-  deleteUser: function(req, res, next) {
-    User.findOne({ email: req.body.email }, function(err, user) {
-      user.remove(function(err, user) {
+  deleteUser: function (req, res, next) {
+    User.findOne({ email: req.body.email }, function (err, user) {
+      user.remove(function (err, user) {
         res.json('User succesfully deleted');
       });
     });
   }
 };
+
