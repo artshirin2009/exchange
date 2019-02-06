@@ -50,7 +50,7 @@ module.exports = {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
         res.sendStatus(403);
-      } else { 
+      } else {
         var userId = authData.user._id;
         User.findOne({ _id: userId }, function (err, user) {
           console.log(user)
@@ -81,6 +81,7 @@ module.exports = {
       if (err) {
         res.sendStatus(403);
       } else {
+        console.log(authData)
         if (authData.user.isAdmin) {
           User.find({}, function (err, users) {
             if (err) {
@@ -93,10 +94,7 @@ module.exports = {
           });
         }
         else {
-          res.json({
-            message: 'You don`t have access to this page',
-
-          });
+          res.sendStatus(401).send("Sorry! You can't see that.");
         }
 
       }
