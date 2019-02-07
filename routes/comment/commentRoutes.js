@@ -1,8 +1,6 @@
 var Post = require('../../models/post');
-var Comment = require('../../models/comment')
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
-
 
 module.exports = {
   /**All posts */
@@ -100,21 +98,5 @@ module.exports = {
       }
     });
   },
-  /**All posts */
-  test: function (req, res, next) {
-    Post.findOne({_id:postId}).populate('postId').exec(function(err, post){
-      if (err) return handleError(err);
-      console.log(post)
-    })
-  },
 };
 
-
-// Story
-// .findOne({ title: 'Bob goes sledding' })
-// .populate('author') //подменяет идентификатор автора информацией об авторе!
-// .exec(function (err, story) {
-//   if (err) return handleError(err);
-//   console.log('The author is %s', story.author.name);
-//   // выводит "The author is Bob Smith"
-// });

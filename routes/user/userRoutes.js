@@ -51,7 +51,6 @@ module.exports = {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) { res.sendStatus(403) }
       var id = req.params.userId
-      console.log(id)
       User.findById(id, (err, user) => {
         res.json(user)
       })
@@ -60,12 +59,10 @@ module.exports = {
   /**Update profile (+images) (PUT)*/
   updateProfile: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
-
       if (err) {
         res.sendStatus(403);
       } else {
         var userId = req.params.userId;
-        console.log(authData.user.isAdmin)
         if (authData.user.isAdmin) {
           User.findById({ _id: userId }, function (err, user) {
             if (req.file) { user.imagePath = req.file.path.slice(15) }
@@ -88,7 +85,6 @@ module.exports = {
               if (req.body.email) { user.email = req.body.email; }
               if (req.body.name) { user.name = req.body.name; };
               if (req.body.password) { user.password = req.body.password; };
-              console.log(req.body.password)
               user.save(function (err, user) {
                 if (err) return res.json(err);
                 jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
@@ -102,7 +98,6 @@ module.exports = {
       }
     })
   },
-
   /**Get profile all users (only if isAdmin:true) (GET)*/
   getAllUsers: function (req, res) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
@@ -127,7 +122,6 @@ module.exports = {
     });
   },
   /**Delete user */
-
   deleteUser: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {

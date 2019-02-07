@@ -1,0 +1,173 @@
+[ model {
+    '$__': 
+     InternalCache {
+       strictMode: true,
+       selected: {},
+       shardval: undefined,
+       saveError: undefined,
+       validationError: undefined,
+       adhocPaths: undefined,
+       removing: undefined,
+       inserting: undefined,
+       saving: undefined,
+       version: undefined,
+       getters: {},
+       _id: [Object
+            ],
+       populate: undefined,
+       populated: undefined,
+       wasPopulated: false,
+       scope: undefined,
+       activePaths: [Object
+            ],
+       pathsToScopes: {},
+       cachedRequired: {},
+       session: null,
+       ownerDocument: undefined,
+       fullPath: undefined,
+       emitter: [Object
+            ],
+       '$options': [Object
+            ]
+        },
+    isNew: false,
+    errors: undefined,
+    _doc: { _id: [Object
+            ],
+       postId: '5c5ae8597fd1c15f2b9c54d7',
+       body: 'Comment 1111 You\'re in charge of the Horizon Festival. Customize everything, hire and fire your friends, and explore Australia in over 350 of the world\'s greatest cars. Make your Horizon the ultimate celebration of cars, music, and freedom of the open road. How you get there is up to you.',
+       created_user: '12132141',
+       __v: 0
+        },
+    '$init': true
+    },
+  model {
+    '$__': 
+     InternalCache {
+       strictMode: true,
+       selected: {},
+       shardval: undefined,
+       saveError: undefined,
+       validationError: undefined,
+       adhocPaths: undefined,
+       removing: undefined,
+       inserting: undefined,
+       saving: undefined,
+       version: undefined,
+       getters: {},
+       _id: [Object
+            ],
+       populate: undefined,
+       populated: undefined,
+       wasPopulated: false,
+       scope: undefined,
+       activePaths: [Object
+            ],
+       pathsToScopes: {},
+       cachedRequired: {},
+       session: null,
+       ownerDocument: undefined,
+       fullPath: undefined,
+       emitter: [Object
+            ],
+       '$options': [Object
+            ]
+        },
+    isNew: false,
+    errors: undefined,
+    _doc: { _id: [Object
+            ],
+       postId: '5c5ae8597fd1c15f2b9c54d7',
+       body: 'Comment 222222 You\'re in charge of the Horizon Festival. Customize everything, hire and fire your friends, and explore Australia in over 350 of the world\'s greatest cars. Make your Horizon the ultimate celebration of cars, music, and freedom of the open road. How you get there is up to you.',
+       created_user: '12132141',
+       __v: 0
+        },
+    '$init': true
+    },
+  model {
+    '$__': 
+     InternalCache {
+       strictMode: true,
+       selected: {},
+       shardval: undefined,
+       saveError: undefined,
+       validationError: undefined,
+       adhocPaths: undefined,
+       removing: undefined,
+       inserting: undefined,
+       saving: undefined,
+       version: undefined,
+       getters: {},
+       _id: [Object
+            ],
+       populate: undefined,
+       populated: undefined,
+       wasPopulated: false,
+       scope: undefined,
+       activePaths: [Object
+            ],
+       pathsToScopes: {},
+       cachedRequired: {},
+       session: null,
+       ownerDocument: undefined,
+       fullPath: undefined,
+       emitter: [Object
+            ],
+       '$options': [Object
+            ]
+        },
+    isNew: false,
+    errors: undefined,
+    _doc: { _id: [Object
+            ],
+       postId: '5c5ae8597fd1c15f2b9c54d7',
+       body: 'Comment 3333 You\'re in charge of the Horizon Festival. Customize everything, hire and fire your friends, and explore Australia in over 350 of the world\'s greatest cars. Make your Horizon the ultimate celebration of cars, music, and freedom of the open road. How you get there is up to you.',
+       created_user: '12132141',
+       __v: 0
+        },
+    '$init': true
+    },
+  model {
+    '$__': 
+     InternalCache {
+       strictMode: true,
+       selected: {},
+       shardval: undefined,
+       saveError: undefined,
+       validationError: undefined,
+       adhocPaths: undefined,
+       removing: undefined,
+       inserting: undefined,
+       saving: undefined,
+       version: undefined,
+       getters: {},
+       _id: [Object
+            ],
+       populate: undefined,
+       populated: undefined,
+       wasPopulated: false,
+       scope: undefined,
+       activePaths: [Object
+            ],
+       pathsToScopes: {},
+       cachedRequired: {},
+       session: null,
+       ownerDocument: undefined,
+       fullPath: undefined,
+       emitter: [Object
+            ],
+       '$options': [Object
+            ]
+        },
+    isNew: false,
+    errors: undefined,
+    _doc: { _id: [Object
+            ],
+       postId: '5c5ae8597fd1c15f2b9c54d7',
+       body: 'Comment 444444444 You\'re in charge of the Horizon Festival. Customize everything, hire and fire your friends, and explore Australia in over 350 of the world\'s greatest cars. Make your Horizon the ultimate celebration of cars, music, and freedom of the open road. How you get there is up to you.',
+       created_user: '12132141',
+       __v: 0
+        },
+    '$init': true
+    }
+]

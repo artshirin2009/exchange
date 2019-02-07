@@ -8,7 +8,7 @@ var routes = require('./userRoutes');
 
 
 
-/**Registration */
+/**Empty route */
 router.get('/', routes.start);
 
 /**Registration */
@@ -27,7 +27,7 @@ router.put('/user/:userId',
     routes.updateProfile);
 
 /**Get profile all users (only if isAdmin:true) */
-router.get('/admin/users', verifyToken, routes.getAllUsers);
+router.get('/users', verifyToken, routes.getAllUsers);
 /**Delete user */
 router.delete('/user/:userId', verifyToken, routes.deleteUser);
 

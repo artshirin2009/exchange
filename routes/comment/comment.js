@@ -3,10 +3,10 @@ var router = express.Router();
 var verifyToken = require('../../config/verifyToken');
 var mongoose = require('mongoose');
 var multerUpload = require('../../config/file-upload');
-var routes = require('./postRoutes');
+var routes = require('./commentRoutes');
 
-/**All posts */
-router.get('/posts', routes.getAllPosts);
+/**Get comments of post */
+router.get('/comment/:postId', routes.getAllPosts);
 
 /**Create post */
 router.post('/post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
@@ -16,7 +16,5 @@ router.put('/post/:post', verifyToken, multerUpload.single('imageFile'), routes.
 
 /**Delete post */
 router.delete('/post/:post', verifyToken, routes.deletePost);
-
-router.get('/p/:postId', routes.test);
 
 module.exports = router;
