@@ -27,7 +27,7 @@ router.put('/user/:userId',
     routes.updateProfile);
 
 /**Get profile all users (only if isAdmin:true) */
-router.get('/users', verifyToken, routes.getAllUsers);
+router.get('/admin/users', verifyToken, routes.getAllUsers);
 /**Delete user */
 router.delete('/user/:userId', verifyToken, routes.deleteUser);
 
