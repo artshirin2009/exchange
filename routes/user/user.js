@@ -27,7 +27,7 @@ router.post('/update-profile',
     routes.updateProfile);
 
 /**Update profiles (only for admin) */
-router.post('/update-profiles',
+router.post('/admin/update-profile',
     verifyToken,
     multerUpload.single('imageFile'),
     routes.updateProfilesForAdmin);

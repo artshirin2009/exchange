@@ -6,16 +6,15 @@ var multerUpload = require('../../config/file-upload');
 var routes = require('./postRoutes');
 
 /**All posts */
-router.get('/', routes.getAllPosts);
+router.get('/posts', routes.getAllPosts);
 
 /**Create post */
-router.post('/create-post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
+router.post('/post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
 
 /**Edit post*/
-router.post('/edit-post', verifyToken,multerUpload.single('imageFile'), routes.editPost);
-
+router.put('/post/:post', verifyToken, multerUpload.single('imageFile'), routes.editPost);
 
 /**Delete post */
-// router.get('/', routes.getAllPosts);
+router.delete('/post/:post', verifyToken, routes.deletePost);
 
 module.exports = router;

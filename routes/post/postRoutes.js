@@ -44,7 +44,7 @@ module.exports = {
         res.sendStatus(403);
       } else {
         if (authData.user.isAdmin) {
-          var id = req.body.id;
+          var id = req.params.post;
           Post.findByIdAndUpdate(id, {
             title: req.body.title,
             description: req.body.description,
@@ -52,7 +52,7 @@ module.exports = {
           }, function (err, doc) { res.json('Post edited') })
         }
         else if (!authData.user.isAdmin) {
-          var id = req.body.id;
+          var id = req.params.post;
           Post.findOne({ _id: id }, function (err, doc) {
             if (err) res.json(err);
             if (doc.created_user === authData.user._id) {
@@ -61,7 +61,7 @@ module.exports = {
               }
               doc.save(function (err, doc) {
                 if (err) return res.json(err);
-                  res.json(doc);
+                res.json(doc);
               });
             }
             else { res.json('You can edit only your posts') }
@@ -71,6 +71,32 @@ module.exports = {
       }
     });
   },
-
+  /**Delete post*/
+  deletePost: function (req, res, next) {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+      if (err) {
+        res.sendStatus(403);
+      } else {
+        if (authData.user.isAdmin) {
+          var postId = req.params.post;
+          Post.deleteOne({ _id: postId }, function (err, doc) { res.json('Post deleted') })
+        }
+        else {
+          var postId = req.params.post;
+          Post.findById({ _id: postId }, function (err, doc) {
+            if (err) res.json(err);
+            console.log(doc.created_user)
+            if (doc.created_user === authData.user._id) {
+              doc.remove(function (err, doc) {
+                if (err) return res.json(err);
+                res.json('Yor post successfully deleted');
+              });
+            }
+            else { res.json('You can delete only your posts') }
+          })
+        }
+      }
+    });
+  },
 };
 
