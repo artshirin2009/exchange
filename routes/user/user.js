@@ -18,26 +18,18 @@ router.post('/registration', routes.registration);
 router.post('/login', routes.login);
 
 /**Get profile page */
-router.get('/get-profile', verifyToken, routes.getProfile);
+router.get('/user/:userId', verifyToken, routes.getProfile);
 
 /**Update profile (+images) */
-router.post('/update-profile',
+router.put('/user/:userId',
     verifyToken,
     multerUpload.single('imageFile'),
     routes.updateProfile);
 
-/**Update profiles (only for admin) */
-router.post('/admin/update-profile',
-    verifyToken,
-    multerUpload.single('imageFile'),
-    routes.updateProfilesForAdmin);
-
 /**Get profile all users (only if isAdmin:true) */
-router.get('/all-users', verifyToken, routes.getAllUsers);
+router.get('/admin/users', verifyToken, routes.getAllUsers);
 /**Delete user */
-router.post('/delete', verifyToken, routes.deleteUser);
-
-
+router.delete('/user/:userId', verifyToken, routes.deleteUser);
 
 
 module.exports = router;

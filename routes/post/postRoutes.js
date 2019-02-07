@@ -31,7 +31,7 @@ module.exports = {
             });
           }
           else {
-            res.json('Post exists')
+            res.json('Post exists') 
           }
         })
       }

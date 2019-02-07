@@ -8,7 +8,7 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
   imagePath: {
-    type: String
+    type: String 
   },
   email: {
     type: String,
