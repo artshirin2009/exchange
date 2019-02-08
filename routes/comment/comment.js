@@ -20,6 +20,6 @@ router.delete('/post/:postId/comment/:commentId', verifyToken, routes.deleteComm
 
 
 /**Get comments of post */
-//router.get('/posts-comment', routes.getPosts);
+// router.get('/posts-comment', routes.getPosts);
 
 module.exports = router;

@@ -152,23 +152,8 @@ module.exports = {
   },
   /**All posts */
   getPosts: function (req, res, next) {
-    
-    Post.find({ }).populate('comments').exec(function(err,doc){
+    Post.find({}).populate('comments').exec(function(err,doc){
       res.json(doc)
-    })
+    }) 
   },
 };
-
-// author.save(function (err) {
-//   if (err) return handleError(err);
-
-//   const story1 = new Story({
-//     title: 'Casino Royale',
-//     author: author._id    // assign the _id from the person
-//   });
-
-//   story1.save(function (err) {
-//     if (err) return handleError(err);
-//     // thats it!
-//   });
-// });

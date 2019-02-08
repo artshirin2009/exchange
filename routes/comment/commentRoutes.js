@@ -1,6 +1,7 @@
 var Comment = require('../../models/comment')
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
+var Post = require('../../models/post')
 
 module.exports = {
   /**Create comment */
@@ -86,12 +87,12 @@ module.exports = {
   },
 
   /**All posts */
-  getPosts: function (req, res, next) {
+  // getPosts: function (req, res, next) {
     
-    Comment.find({ }).populate('postId').exec(function(err,doc){
-      res.json(doc)
-    })
-  },
+  //   Comment.find({ }).populate('postId').exec(function(err,doc){
+  //     res.json(doc)
+  //   })
+  // },
 
 
 
