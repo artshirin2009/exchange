@@ -1,102 +1,102 @@
-var Post = require('../../models/post');
+var Comment = require('../../models/comment')
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 
 module.exports = {
-  /**All posts */
-  getAllPosts: function (req, res, next) {
-    Post.find({}, function (err, posts) {
-      res.json(posts)
-    })
-  },
-  /**Create post */
-  createPost: function (req, res, next) {
+  /**Create comment */
+  createComment: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
         res.sendStatus(403);
       } else {
-        var title = req.body.title;
-        Post.find({ title }, function (err, doc) {
-          if (doc.length <= 0) {
-            var post = {
-              _id: new mongoose.Types.ObjectId(),
-              title: req.body.title,
-              image: req.file.path.slice(15),
-              description: req.body.description,
-              created_user: authData.user._id
-            };
-            var newPost = new Post(post);
-            newPost.save(function (err, post) {
-              res.json(post);
-            });
+        var comment = new Comment(
+          {
+            author: req.body.author,
+            content: req.body.content,
+            postId: req.params.postId
           }
-          else {
-            res.json('Post exists') 
+        );
+        comment.save(function (err, comment) {
+          if (err) return handleError(err);
+          res.json(comment)
+        });
+      }
+    });
+  },
+  /**All posts */
+  getCommentsFromPost: function (req, res, next) {
+    var postId = req.params.postId
+    Comment.find({ postId: postId }, function (err, comments) {
+      res.json(comments)
+    })
+  },
+  /**Edit post*/
+  editComment: function (req, res, next) {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+      if (err) {res.sendStatus(403);}
+      if (authData.user.isAdmin) {
+        var id = req.params.commentId;
+        Comment.findById({ _id: id }, function (err, comment) {
+          if (req.body.content) { comment.content = req.body.content }
+          comment.save(function (err, comment) {
+            if (err) return res.json(err);
+            res.json(['Comment updated by admin', comment]);
+          })
+        })
+      }
+      if (!authData.user.isAdmin) {
+        var id = req.params.commentId;
+        Comment.findById({ _id: id }, function (err, comment) {
+          if (comment!=undefined && comment.author == authData.user._id) {
+            if (req.body.content) { comment.content = req.body.content }
+            comment.save(function (err, comment) {
+              if (err) return res.json(err);
+              res.json(['Comment updated by user', comment]);
+            })
           }
+          else { res.json('You can edit only your comments') }
         })
       }
     });
   },
-  /**Edit post*/
-  editPost: function (req, res, next) {
+/**Delete post*/
+  deleteComment:function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) {
         res.sendStatus(403);
-      } else {
-        if (authData.user.isAdmin) {
-          var id = req.params.post;
-          Post.findByIdAndUpdate(id, {
-            title: req.body.title,
-            description: req.body.description,
-            image: req.file.path.slice(15),
-          }, function (err, doc) { res.json('Post edited') })
-        }
-        else if (!authData.user.isAdmin) {
-          var id = req.params.post;
-          Post.findOne({ _id: id }, function (err, doc) {
-            if (err) res.json(err);
-            if (doc.created_user === authData.user._id) {
-              if (req.body.title) {
-                doc.title = req.body.title;
-              }
-              doc.save(function (err, doc) {
-                if (err) return res.json(err);
-                res.json(doc);
-              });
-            }
-            else { res.json('You can edit only your posts') }
-          })
-        }
-        else { res.json('You can edit only your posts') }
+      }
+      if (authData.user.isAdmin) {
+        var id = req.params.commentId;
+        Comment.deleteOne({ _id:  id }, function (err, doc) { res.json('Comment deleted') })
+      }
+      else { 
+        var id = req.params.commentId;
+        Comment.findById({ _id: id }, function (err, comment) {
+          if (err) res.json(err);
+          if(comment!=undefined && comment.author==authData.user._id) {
+            Comment.deleteOne({ _id:  id }, function (err, doc) { res.json('Comment deleted') })
+          }
+          else {
+            if(id){res.json('You can delete only your comments')}
+            else{}
+           }
+        })
       }
     });
   },
-  /**Delete post*/
-  deletePost: function (req, res, next) {
-    jwt.verify(req.token, 'secretkey', (err, authData) => {
-      if (err) {
-        res.sendStatus(403);
-      } else {
-        if (authData.user.isAdmin) {
-          var postId = req.params.post;
-          Post.deleteOne({ _id: postId }, function (err, doc) { res.json('Post deleted') })
-        }
-        else {
-          var postId = req.params.post;
-          Post.findById({ _id: postId }, function (err, doc) {
-            if (err) res.json(err);
-            console.log(doc.created_user)
-            if (doc.created_user === authData.user._id) {
-              doc.remove(function (err, doc) {
-                if (err) return res.json(err);
-                res.json('Yor post successfully deleted');
-              });
-            }
-            else { res.json('You can delete only your posts') }
-          })
-        }
-      }
-    });
+
+  /**All posts */
+  getPosts: function (req, res, next) {
+    
+    Comment.find({ }).populate('postId').exec(function(err,doc){
+      res.json(doc)
+    })
   },
+
+
+
+
+
+
 };
 

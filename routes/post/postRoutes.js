@@ -11,6 +11,17 @@ module.exports = {
       res.json(posts)
     })
   },
+  /**Get post by Id*/
+  getPostById: function (req, res, next) {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+      if (err) { res.sendStatus(403); }
+      var id = req.params.postId
+
+      Post.findById({ _id: id }, function (err, post) {
+        res.json(post)
+      })
+    })
+  },
   /**Create post */
   createPost: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
@@ -33,7 +44,7 @@ module.exports = {
             });
           }
           else {
-            res.json('Post exists') 
+            res.json('Post exists')
           }
         })
       }
@@ -100,21 +111,64 @@ module.exports = {
       }
     });
   },
+  /**All posts with comments */
+  getPostWithComments: function (req, res, next) {
+    var id = req.params.postId
+    Post.findOne({ _id: id }).
+      populate('postId').
+      exec(function (err, post) {
+        if (err) return handleError(err);
+        res.json(post)
+      })
+  },
+
+  /**Create post with comments*/
+  createPostWithComments: function (req, res, next) {
+    jwt.verify(req.token, 'secretkey', (err, authData) => {
+      if (err) {
+        res.sendStatus(403);
+      } else {
+        var title = req.body.title;
+        Post.find({ title }, function (err, doc) {
+          if (doc.length <= 0) {
+            var post = {
+              _id: new mongoose.Types.ObjectId(),
+              title: req.body.title,
+              image: req.file.path.slice(15),
+              description: req.body.description,
+              created_user: authData.user._id
+            };
+            var newPost = new Post(post);
+            newPost.save(function (err) {
+              res.json(post);
+            });
+          }
+          else {
+            res.json('Post exists')
+          }
+        })
+      }
+    });
+  },
   /**All posts */
-  test: function (req, res, next) {
-    Post.findOne({_id:postId}).populate('postId').exec(function(err, post){
-      if (err) return handleError(err);
-      console.log(post)
+  getPosts: function (req, res, next) {
+    
+    Post.find({ }).populate('comments').exec(function(err,doc){
+      res.json(doc)
     })
   },
 };
 
-
-// Story
-// .findOne({ title: 'Bob goes sledding' })
-// .populate('author') //подменяет идентификатор автора информацией об авторе!
-// .exec(function (err, story) {
+// author.save(function (err) {
 //   if (err) return handleError(err);
-//   console.log('The author is %s', story.author.name);
-//   // выводит "The author is Bob Smith"
+
+//   const story1 = new Story({
+//     title: 'Casino Royale',
+//     author: author._id    // assign the _id from the person
+//   });
+
+//   story1.save(function (err) {
+//     if (err) return handleError(err);
+//     // thats it!
+//   });
 // });

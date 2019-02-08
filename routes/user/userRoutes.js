@@ -3,6 +3,9 @@ var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt')
 
+/**find modules */
+var userFind = require('../../config/find-users')
+
 module.exports = {
   /**Start test route (GET) */
   start: function (req, res, next) {
@@ -31,18 +34,23 @@ module.exports = {
   /**Login users (POST)*/
   login: function (req, res, next) {
     User.findOne({ email: req.body.email }, function (err, user) {
-      var comparePass = bcrypt.compareSync(req.body.password, user.password)
-      if (comparePass) {
-        if (err) { res.json(err) };
-        jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
-          res.json({
-            user,
-            token
+      if (user != undefined) {
+        var comparePass = bcrypt.compareSync(req.body.password, user.password)
+        if (comparePass) {
+          if (err) { res.json(err) };
+          jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+            res.json({
+              user,
+              token
+            });
           });
-        });
+        }
+        else {
+          res.sendStatus(403);
+        }
       }
       else {
-        res.sendStatus(403);
+        res.json(err)
       }
     });
   },
@@ -64,34 +72,11 @@ module.exports = {
       } else {
         var userId = req.params.userId;
         if (authData.user.isAdmin) {
-          User.findById({ _id: userId }, function (err, user) {
-            if (req.file) { user.imagePath = req.file.path.slice(15) }
-            if (req.body.name) { user.name = req.body.name; }
-            if (req.body.email) { user.email = req.body.email; }
-            if (req.body.password) { user.password = req.body.password; };
-
-            user.save(function (err, user) {
-              if (err) return res.json(err);
-              jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
-                res.json(['User updated by admin', user, token]);
-              });
-            })
-          })
+          userFind(req, res, User, userId, authData);
         }
         else if (!authData.user.isAdmin) {
           if (userId === authData.user._id) {
-            User.findById({ _id: userId }, function (err, user) {
-              if (req.file) { user.imagePath = req.file.path.slice(15) }
-              if (req.body.email) { user.email = req.body.email; }
-              if (req.body.name) { user.name = req.body.name; };
-              if (req.body.password) { user.password = req.body.password; };
-              user.save(function (err, user) {
-                if (err) return res.json(err);
-                jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
-                  res.json(['User updated by user', user, token]);
-                });
-              })
-            })
+            userFind(req, res, User, userId, authData);
           }
           else { res.json('You can edit only your account') }
         }
@@ -106,9 +91,6 @@ module.exports = {
       } else {
         if (authData.user.isAdmin) {
           User.find({}, function (err, users) {
-            if (err) {
-              console.log(err);
-            }
             res.json({
               message: 'You are admin...',
               users
@@ -129,7 +111,7 @@ module.exports = {
       } else {
         if (authData.user.isAdmin) {
           var userId = req.params.userId;
-          User.deleteOne({ _id: userId }, function (err, doc) { res.json('User deleted by admin') })
+          User.deleteOne({ _id: userId }, function (err, doc) { res.json({message:'User deleted by admin'}) })
         }
         else {
           var userId = req.params.userId;
@@ -138,14 +120,13 @@ module.exports = {
             if (user._id == authData.user._id) {
               user.remove(function (err, user) {
                 if (err) return res.json(err);
-                res.json('User successfully deleted');
+                res.json({message:'User successfully deleted'});
               });
             }
-            else { res.json('You can delete only your account') }
+            else { res.json({message:'You can delete only your account'}) }
           })
         }
       }
     });
   }
 };
-

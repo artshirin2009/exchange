@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var userSchema = new Schema({
+var postSchema = new Schema({
   title: {
     type: String,
     required: true
@@ -17,7 +17,8 @@ var userSchema = new Schema({
   created_user: {
     type: String,
     required: true
-  }
+  },
+  comments:{ type: Schema.Types.ObjectId, ref: 'Comment' }
 });
 
-module.exports = mongoose.model('Post', userSchema);
+module.exports = mongoose.model('Post', postSchema);
