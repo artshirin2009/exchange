@@ -12,15 +12,17 @@ module.exports = {
       } else {
         var comment = new Comment(
           {
-            author: req.body.author,
+            author: authData.user._id,
             content: req.body.content,
-            postId: req.params.postId
+            postId: req.params.postId 
           }
         );
-        comment.save(function (err, comment) {
-          if (err) return handleError(err);
-          res.json(comment)
-        });
+        comment.save();
+        Post.findById(req.params.postId).populate('comments').exec(function(err, post){
+          post.comments.push(comment);
+          post.save();
+          res.json(post) 
+      });
       }
     });
   },

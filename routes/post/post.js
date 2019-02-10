@@ -20,13 +20,4 @@ router.put('/post/:post', verifyToken, multerUpload.single('imageFile'), routes.
 /**Delete post */
 router.delete('/post/:post', verifyToken, routes.deletePost);
 
-/**Post with comments*/
-router.get('/post-with-comments/:postId', routes.getPostWithComments);
-
-/**Create post */
-router.post('/post-with-comments', verifyToken, multerUpload.single('imageFile'), routes.createPostWithComments);
-
-/**All posts */
-router.get('/posts-comment', routes.getPosts);
-
 module.exports = router;
