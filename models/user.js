@@ -33,7 +33,6 @@ userSchema.methods.toJSON = function() {
   var obj = this.toObject();
   delete obj.password;
   delete obj.isAdmin;
-  delete obj._id
   return obj;
  }
 

@@ -6,7 +6,7 @@ var postSchema = new Schema({
     type: String,
     required: true
   },
-  image: {
+  imageFile: {
     type: String,
     required: false
   },

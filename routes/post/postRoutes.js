@@ -7,27 +7,27 @@ var mongoose = require('mongoose');
 module.exports = {
   /**All posts */
   getAllPosts: function (req, res, next) {
-    Post.find({}).populate("comments created_user").exec(function(err, posts) {
-      if(err) {
-          console.log(err);
+    Post.find({}).populate("comments created_user").exec(function (err, posts) {
+      if (err) {
+        console.log(err);
       } else {
-          res.json(posts);
+        res.json(posts);
       }
-  });
+    });
   },
   /**Get post by Id*/
-  getPostById: function (req, res, next) { 
+  getPostById: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) { res.sendStatus(403); }
       var id = req.params.postId
 
-      Post.findById({ _id: id }).populate("comments created_user").exec(function(err, post) {
-        if(err) {
-            console.log(err);
+      Post.findById({ _id: id }).populate("comments created_user").exec(function (err, post) {
+        if (err) {
+          console.log(err);
         } else {
-            res.json(post);
+          res.json(post);
         }
-    });
+      });
     })
   },
   /**Create post */
@@ -37,19 +37,42 @@ module.exports = {
         res.sendStatus(403);
       } else {
         var title = req.body.title;
+
         Post.find({ title }, function (err, doc) {
           if (doc.length <= 0) {
-            var post = {
-              _id: new mongoose.Types.ObjectId(),
-              title: req.body.title,
-              image: req.file.path.slice(15),
-              description: req.body.description,
-              created_user: authData.user._id
-            };
+
+
+
+            
+            if (req.file) {
+              var post = {
+                _id: new mongoose.Types.ObjectId(),
+                title: req.body.title,
+                imageFile: req.file.path.slice(15),
+                description: req.body.description,
+                created_user: authData.user._id
+              };
+            }
+            else {
+              var post = {
+                _id: new mongoose.Types.ObjectId(),
+                title: req.body.title,
+                description: req.body.description,
+                created_user: authData.user._id
+              };
+            }
+
+
+
+
             var newPost = new Post(post);
             newPost.save(function (err, post) {
               res.json(post);
             });
+
+
+
+
           }
           else {
             res.json('Post exists')
