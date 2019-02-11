@@ -10,13 +10,13 @@ module.exports = {
       if (err) {
         res.sendStatus(403);
       } else {
-        var comment = new Comment(
+        var comment = new Comment( 
           {
-            author: authData.user._id,
+            author: authData.user,
             content: req.body.content,
             postId: req.params.postId 
           }
-        );
+        );        
         comment.save();
         Post.findById(req.params.postId).populate('comments').exec(function(err, post){
           post.comments.push(comment);

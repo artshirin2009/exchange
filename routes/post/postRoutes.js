@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 module.exports = {
   /**All posts */
   getAllPosts: function (req, res, next) {
-    Post.find({}).populate("comments").exec(function(err, posts) {
+    Post.find({}).populate("comments created_user").exec(function(err, posts) {
       if(err) {
           console.log(err);
       } else {
@@ -16,7 +16,7 @@ module.exports = {
   });
   },
   /**Get post by Id*/
-  getPostById: function (req, res, next) {
+  getPostById: function (req, res, next) { 
     jwt.verify(req.token, 'secretkey', (err, authData) => {
       if (err) { res.sendStatus(403); }
       var id = req.params.postId

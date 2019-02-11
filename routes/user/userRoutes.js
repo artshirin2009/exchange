@@ -33,12 +33,14 @@ module.exports = {
   },
   /**Login users (POST)*/
   login: function (req, res, next) {
+    
     User.findOne({ email: req.body.email }, function (err, user) {
       if (user != undefined) {
+        
         var comparePass = bcrypt.compareSync(req.body.password, user.password)
-        if (comparePass) {
-          if (err) { res.json(err) };
+        if (comparePass) { 
           jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+            
             res.json({
               user,
               token
@@ -46,10 +48,12 @@ module.exports = {
           });
         }
         else {
+          
           res.sendStatus(403);
         }
       }
       else {
+        
         res.json(err)
       }
     });

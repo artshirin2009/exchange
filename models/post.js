@@ -15,8 +15,8 @@ var postSchema = new Schema({
     required: true
   },
   created_user: {
-    type: String,
-    required: true
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
   comments: [{
     type: Schema.Types.ObjectId,
