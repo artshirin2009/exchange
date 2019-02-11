@@ -108,10 +108,10 @@ module.exports = {
                 res.json(doc);
               });
             }
-            else { res.json('You can edit only your posts') }
+            else { res.status(403).json('You can edit only your posts') }
           })
         }
-        else { res.json('You can edit only your posts') }
+        else { res.status(403).json('You can edit only your posts') }
       }
     });
   },
@@ -136,7 +136,7 @@ module.exports = {
                 res.json('Yor post successfully deleted');
               });
             }
-            else { res.json('You can delete only your posts') }
+            else { res.status(403).json('You can delete only your posts') }
           })
         }
       }

@@ -82,7 +82,7 @@ module.exports = {
           if (userId === authData.user._id) {
             userFind(req, res, User, userId, authData);
           }
-          else { res.json('You can edit only your account') }
+          else { res.status(403).json('You can edit only your account') }
         }
       }
     })
@@ -127,7 +127,7 @@ module.exports = {
                 res.json({message:'User successfully deleted'});
               });
             }
-            else { res.json({message:'You can delete only your account'}) }
+            else {res.status(403).json('You can delete only your account') }
           })
         }
       }

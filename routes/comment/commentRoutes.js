@@ -50,7 +50,7 @@ module.exports = {
               res.json(['Comment updated by user', comment]);
             })
           }
-          else { res.json('You can edit only your comments') }
+          else { res.status(403).json('You can edit only your comments') }
         })
       }
     });
@@ -73,7 +73,7 @@ module.exports = {
             Comment.deleteOne({ _id:  id }, function (err, doc) { res.json('Comment deleted') })
           }
           else {
-            if(id){res.json('You can delete only your comments')}
+            if(id){res.status(403).json('You can delete only your comments')}
             else{}
            }
         })
