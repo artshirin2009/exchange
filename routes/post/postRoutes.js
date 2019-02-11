@@ -99,7 +99,7 @@ module.exports = {
           var id = req.params.post;
           Post.findOne({ _id: id }, function (err, doc) {
             if (err) res.json(err);
-            if (doc.created_user === authData.user._id) {
+            if (doc.created_user == authData.user._id) {
               if (req.body.title) {
                 doc.title = req.body.title;
               }
