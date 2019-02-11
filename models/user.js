@@ -29,6 +29,15 @@ var userSchema = new Schema({
   }
 });
 
+userSchema.methods.toJSON = function() {
+  var obj = this.toObject();
+  delete obj.password;
+  delete obj.isAdmin;
+  delete obj._id
+  return obj;
+ }
+
+
 // hash user password before saving into database
 userSchema.pre('save', function(next) {
   this.password = bcrypt.hashSync(this.password, saltRounds);

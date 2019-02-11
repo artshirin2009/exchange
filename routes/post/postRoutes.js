@@ -21,7 +21,7 @@ module.exports = {
       if (err) { res.sendStatus(403); }
       var id = req.params.postId
 
-      Post.findById({ _id: id }).populate("comments").exec(function(err, post) {
+      Post.findById({ _id: id }).populate("comments created_user").exec(function(err, post) {
         if(err) {
             console.log(err);
         } else {
