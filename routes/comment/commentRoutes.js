@@ -26,13 +26,6 @@ module.exports = {
       }
     });
   },
-  /**All posts */
-  getCommentsFromPost: function (req, res, next) {
-    var postId = req.params.postId
-    Comment.find({ postId: postId }, function (err, comments) {
-      res.json(comments)
-    })
-  },
   /**Edit post*/
   editComment: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
@@ -86,20 +79,6 @@ module.exports = {
         })
       }
     });
-  },
-
-  /**All posts */
-  // getPosts: function (req, res, next) {
-    
-  //   Comment.find({ }).populate('postId').exec(function(err,doc){
-  //     res.json(doc)
-  //   })
-  // },
-
-
-
-
-
-
+  }
 };
 

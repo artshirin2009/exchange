@@ -6,7 +6,7 @@ var multerUpload = require('../../config/file-upload');
 var routes = require('./commentRoutes');
 
 /**Get comments of post */
- router.get('/post/:postId/comments', routes.getCommentsFromPost);
+// router.get('/post/:postId/comments', routes.getCommentsFromPost);
 
 /**Create comment */
  router.post('/post/:postId/comment',verifyToken, routes.createComment);
@@ -16,10 +16,5 @@ router.put('/post/:postId/comment/:commentId', verifyToken, routes.editComment);
 
 /**Delete comment */
 router.delete('/post/:postId/comment/:commentId', verifyToken, routes.deleteComment);
-
-
-
-/**Get comments of post */
-// router.get('/posts-comment', routes.getPosts);
 
 module.exports = router;
