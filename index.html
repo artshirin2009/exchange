@@ -62,6 +62,13 @@
     <script>
         $(function () {
             var socket = io();
+            socket.on('history', function (element) {
+                console.log(element.text)
+                $('#messages').append($('<li>').text(element.text));
+            }); 
+
+
+
             $('form').submit(function (e) {
                 e.preventDefault(); // prevents page reloading
                 socket.emit('send user', $('#m').val());

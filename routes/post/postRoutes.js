@@ -102,7 +102,7 @@ module.exports = {
             if (doc.created_user == authData.user._id) {
               if (req.body.title) {doc.title = req.body.title;}
               if(req.body.description){doc.description = req.body.description;}
-
+              if (req.file) { doc.imageFile = req.file.path.slice(15) }
               doc.save(function (err, doc) {
                 if (err) return res.json(err);
                 res.json(doc);
