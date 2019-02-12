@@ -1,9 +1,6 @@
-var createError = require('http-errors');
-var express = require('express');
+
+ var express = require('express');
 var path = require('path');
-
-var mongoose = require('mongoose')
-
 
 var cors = require('cors')
 
@@ -16,7 +13,7 @@ var userComments = require('./routes/comment/comment');
 
 require('./config/database');
 
-var app = express();
+ var app = express();
 
 app.set('secretKey', 'nodeRestApi'); // jwt secret token
 app.use(cors())
@@ -31,4 +28,40 @@ app.use('/', userRouter);
 app.use('/', userComments);
 
 
-module.exports = app;
+
+
+// var http = require('http');
+// var io = require('socket.io')(http);
+
+
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+
+
+app.get('/s', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+  });
+
+  io.on('connection', function(socket){
+    console.log('client connected s');
+
+
+    socket.on('send user', function(msg){
+      io.emit('new message', msg);
+    });
+
+    socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+
+
+  });
+
+http.listen(4000, function(){
+  console.log('listening on *:4000');
+});
+
+
+// var server = http.createServer(app);
+// server.listen(4000);
