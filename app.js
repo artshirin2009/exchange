@@ -45,76 +45,47 @@ app.get('/chat',
         Message.find().limit(10).sort('-date').exec(function (err, lastTenMessages) {
             history = lastTenMessages;
             console.log(history)
-            
-            setTimeout(function(){
+
+            setTimeout(function () {
                 res.json(lastTenMessages)
-            },1000)
-          //res.sendFile(__dirname + '/index.html');
-
-
-
-
-          
-    // let promise = new Promise((resolve, reject) => {
-    
-    //   setTimeout(() => {
-    //     // переведёт промис в состояние fulfilled с результатом "result"
-    //     resolve("result");
-    //   }, 1000);
-    
-    // });
-    
-    // // promise.then навешивает обработчики на успешный результат или ошибку
-    // promise
-    //   .then(
-    //     result => {
-    //       // первая функция-обработчик - запустится при вызове resolve
-    //       alert("Fulfilled: " + result); // result - аргумент resolve
-    //     },
-    //     error => {
-    //       // вторая функция - запустится при вызове reject
-    //       alert("Rejected: " + error); // error - аргумент reject
-    //     }
-    //   );
-
-
-
-
-
-
-
-
-
+            }, 1000)
+            //res.sendFile(__dirname + '/index.html');
 
         })
 
-
+ 
     });
 
 
 
 /**Socket listening */
 io.on('connection', function (socket) {
-    console.log('client connected');
-    var once = false;
-    if (!once) {
-        history.forEach(element => {
-            socket.emit('history', element)
-        });
-        once = true;
-    }
-    socket.on('send user', function (msg) {
-        console.log(msg)
-        var newMessage = new Message();
-        newMessage.text = msg;
-        newMessage.date = Date.now();
-        newMessage.save();
-        io.emit('new message', msg);
-    });
+    console.log(history)
 
-    socket.on('disconnect', function () {
-        console.log('user disconnected');
-    });
+
+    setTimeout(function () {
+        var once = false;
+        if (!once) {
+            history.forEach(element => {
+                socket.emit('history', element)
+            });
+            once = true;
+        }
+        socket.on('send user', function (msg) {
+            console.log(msg)
+            var newMessage = new Message();
+            newMessage.text = msg;
+            newMessage.date = Date.now();
+            newMessage.save();
+            io.emit('new message', msg);
+        });
+
+        socket.on('disconnect', function () {
+            console.log('user disconnected');
+        });
+    }, 2000)
+    console.log('client connected');
+
 
 
 });
