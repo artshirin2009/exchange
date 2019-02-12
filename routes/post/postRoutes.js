@@ -118,6 +118,7 @@ module.exports = {
   /**Delete post*/
   deletePost: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
+      
       if (err) {
         res.sendStatus(403);
       } else {
@@ -130,7 +131,8 @@ module.exports = {
           Post.findById({ _id: postId }, function (err, doc) {
             if (err) res.json(err);
             console.log(doc.created_user)
-            if (doc.created_user === authData.user._id) {
+            console.log(authData.user._id)
+            if (doc.created_user == authData.user._id) {
               doc.remove(function (err, doc) {
                 if (err) return res.json(err);
                 res.json('Yor post successfully deleted');
