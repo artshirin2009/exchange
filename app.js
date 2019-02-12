@@ -1,19 +1,20 @@
 
- var express = require('express');
+var express = require('express');
 var path = require('path');
 
 var cors = require('cors')
 
 var dotenv = require('dotenv').config();
 var jwt = require('jsonwebtoken');
-
+var verifyToken = require(__dirname + '/config/verifyToken');
 var userRouter = require('./routes/user/user');
 var userPosts = require('./routes/post/post');
 var userComments = require('./routes/comment/comment');
+//var chatRoutes = require('./routes/chat/chat');
 
 require('./config/database');
 
- var app = express();
+var app = express();
 
 app.set('secretKey', 'nodeRestApi'); // jwt secret token
 app.use(cors())
@@ -26,42 +27,35 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use('/', userPosts);
 app.use('/', userRouter);
 app.use('/', userComments);
-
-
-
-
-// var http = require('http');
-// var io = require('socket.io')(http);
-
+//app.use('/', chatRoutes);
 
 var http = require('http').Server(app);
+
+/**Socket io */
 var io = require('socket.io')(http);
 
-
-
-app.get('/s', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-  });
-
-  io.on('connection', function(socket){
-    console.log('client connected s');
-
-
-    socket.on('send user', function(msg){
-      io.emit('new message', msg);
+app.get('/chat',
+    //verifyToken,
+    function (req, res, next) {
+        res.sendFile(__dirname + '/index.html');
     });
 
-    socket.on('disconnect', function(){
-      console.log('user disconnected');
+/**Socket listening */
+io.on('connection', function (socket) {
+    console.log('client connected');
+
+
+    socket.on('send user', function (msg) {
+        io.emit('new message', msg);
+    });
+
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
     });
 
 
-  });
-
-http.listen(4000, function(){
-  console.log('listening on *:4000');
 });
 
-
-// var server = http.createServer(app);
-// server.listen(4000);
+http.listen(4000, function () {
+    console.log('listening on *:4000');
+});
