@@ -101,8 +101,8 @@ module.exports = {
             if (err) res.json(err);
             if (doc.created_user == authData.user._id) {
               if (req.body.title) {doc.title = req.body.title;}
-              if(doc.description){doc.description = req.body.description;}
-              
+              if(req.body.description){doc.description = req.body.description;}
+
               doc.save(function (err, doc) {
                 if (err) return res.json(err);
                 res.json(doc);
