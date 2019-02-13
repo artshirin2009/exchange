@@ -88,7 +88,7 @@ io.on('connection', function (socket) {
                     mes: msg.messageText,
                     connected : mesNumUsers
                 };
-                io.emit('new message', dataToSend);
+               socket.emit('new message', dataToSend);
             })
         });
         once = true;
