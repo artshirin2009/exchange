@@ -43,18 +43,28 @@ var history;
 app.get('/chat',
     //verifyToken,
     function (req, res, next) {
-        Message.find().exec(function (err, lastTenMessages) {
-            history = lastTenMessages;
+        Message.find().populate('author')
+        .limit(1)
+        // .sort('data')
+        .exec(function (err, data) {
+           
+           var  messages;
+           console.log(data)
+            // lastTenMessages.forEach(element => {
+            //     messages.message = element.message;
+            //     messages.name = element.author;
+            //     //mess
+            // });
 
             // res.sendFile(__dirname + '/index.html')
-            res.json(lastTenMessages)
+            res.json(data[0].author.name + data[0].author.imagePath)
 
         })
     }); 
 app.get('/mychat',
     //verifyToken,
     function (req, res, next) {
-        Message.find().exec(function (err, lastTenMessages) {
+        Message.find().limit(5).exec(function (err, lastTenMessages) {
             history = lastTenMessages;
             res.sendFile(__dirname + '/index.html')
             //res.json(lastTenMessages)
@@ -74,22 +84,31 @@ io.on('connection', function (socket) {
         //     socket.emit('history', element)
         // });
         socket.on('send-from-user', function (msg) {
-            console.log(msg)
+            if(!typeof msg === Object){
+                res.sendStatus(403)
+            }
             var newMessage = new Message();
-            newMessage.text = msg.messageText;
+            newMessage.text = msg.message;
             newMessage.author = msg.userId;
             newMessage.createDate = Date.now();
             newMessage.save();
             let mesNumUsers = `${numUsers} users connected at this moment.`
             User.findOne({ _id: msg.userId }, function (err, user) {
+                if(err){
+                    res.sendStatus(403).json(err)
+                }
+                var dataToSend;
+                
                 var dataToSend = {
                     name: user.name,
                     avatar: user.imagePath,
-                    mes: msg.messageText,
-                    connected : mesNumUsers
+                    message: msg.message
                 };
-               socket.emit('new message', dataToSend);
+                console.log('Data to send - ')
+                console.log(dataToSend)
+               io.emit('new message', dataToSend);
             })
+            
         });
         once = true;
     }

@@ -3,9 +3,10 @@ var Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
     author: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
-    text: {
+    message: {
         type: String
     },
     /**Time to live for the comment 120 sec*/

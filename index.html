@@ -71,7 +71,7 @@
                 e.preventDefault(); // prevents page reloading
                 socket.emit('send-from-user', {
                     userId: $('#userId').text(),
-                    messageText: $('#m').val()
+                    message: $('#m').val()
                 })
                     ;
                 // $('#m').val('');
@@ -79,8 +79,7 @@
             });
             socket.on('new message', function (msg) {
                 $('#messages').append($('<li>').text(msg.name));
-                $('#messages').append($('<li>').text(msg.connected));
-                $('#messages').append($('<li>').text(msg.mes));
+                $('#messages').append($('<li>').text(msg.message));
                 $('#messages').append($('<img>').attr('src', `/uploads/${msg.avatar}`));
             });
         });
