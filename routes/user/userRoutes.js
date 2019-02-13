@@ -27,7 +27,7 @@ module.exports = {
           res.json(user);
         });
       } else {
-        res.json('User with this email already exists');
+        res.status(403).json('User with this email already exists')
       }
     });
   },

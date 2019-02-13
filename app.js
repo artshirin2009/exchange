@@ -50,7 +50,7 @@ app.get('/chat',
             res.json(lastTenMessages)
 
         })
-    });
+    }); 
 app.get('/mychat',
     //verifyToken,
     function (req, res, next) {
@@ -59,6 +59,7 @@ app.get('/mychat',
             res.sendFile(__dirname + '/index.html')
             //res.json(lastTenMessages)
         })
+        
     });
 
 let numUsers = 0;
@@ -66,20 +67,20 @@ let numUsers = 0;
 io.on('connection', function (socket) {
     console.log('client connected');
     ++numUsers;
-    
-    
+    console.log(`${numUsers} users connected at this moment.`)  
     var once = false;
     if (!once) {
         // history.forEach(element => {
         //     socket.emit('history', element)
         // });
         socket.on('send-from-user', function (msg) {
+            console.log(msg)
             var newMessage = new Message();
             newMessage.text = msg.messageText;
             newMessage.author = msg.userId;
-            newMessage.date = Date.now();
+            newMessage.createDate = Date.now();
             newMessage.save();
-            let mesNumUsers = `${numUsers} connected at this moment`
+            let mesNumUsers = `${numUsers} users connected at this moment.`
             User.findOne({ _id: msg.userId }, function (err, user) {
                 var dataToSend = {
                     name: user.name,
@@ -94,7 +95,9 @@ io.on('connection', function (socket) {
     }
     socket.on('disconnect', function () {
         console.log('user disconnected');
+        console.log(' ');
         --numUsers;
+        console.log(`${numUsers} users connected at this moment.`)
     });
 });
 

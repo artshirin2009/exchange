@@ -8,7 +8,9 @@ const messageSchema = new Schema({
     text: {
         type: String
     },
-    date: Date
+    /**Time to live for the comment 120 sec*/
+    createDate: { type: Date, default: Date.now, expires:'120m'} 
+
 });
 
 module.exports = mongoose.model('Message', messageSchema);
