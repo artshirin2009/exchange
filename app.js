@@ -36,60 +36,67 @@ var io = require('socket.io')(http);
 
 
 var Message = require(__dirname + '/models/message');
-var history;
+var User = require(__dirname + '/models/user');
 
+var history;
 
 app.get('/chat',
     //verifyToken,
     function (req, res, next) {
-        Message.find().limit(10).sort('-date').exec(function (err, lastTenMessages) {
+        Message.find().exec(function (err, lastTenMessages) {
             history = lastTenMessages;
-            console.log(history)
 
-            setTimeout(function () {
-                res.json(lastTenMessages)
-            }, 1000)
-            //res.sendFile(__dirname + '/index.html');
+            // res.sendFile(__dirname + '/index.html')
+            res.json(lastTenMessages)
 
         })
-
- 
+    });
+app.get('/mychat',
+    //verifyToken,
+    function (req, res, next) {
+        Message.find().exec(function (err, lastTenMessages) {
+            history = lastTenMessages;
+            res.sendFile(__dirname + '/index.html')
+            //res.json(lastTenMessages)
+        })
     });
 
-
-
+let numUsers = 0;
 /**Socket listening */
 io.on('connection', function (socket) {
-    console.log(history)
-
-
-    setTimeout(function () {
-        var once = false;
-        if (!once) {
-            history.forEach(element => {
-                socket.emit('history', element)
-            });
-            once = true;
-        }
-        socket.on('send user', function (msg) {
-            console.log(msg)
+    console.log('client connected');
+    ++numUsers;
+    
+    
+    var once = false;
+    if (!once) {
+        // history.forEach(element => {
+        //     socket.emit('history', element)
+        // });
+        socket.on('send-from-user', function (msg) {
             var newMessage = new Message();
-            newMessage.text = msg;
+            newMessage.text = msg.messageText;
+            newMessage.author = msg.userId;
             newMessage.date = Date.now();
             newMessage.save();
-            io.emit('new message', msg);
+            let mesNumUsers = `${numUsers} connected at this moment`
+            User.findOne({ _id: msg.userId }, function (err, user) {
+                var dataToSend = {
+                    name: user.name,
+                    avatar: user.imagePath,
+                    mes: msg.messageText,
+                    connected : mesNumUsers
+                };
+                io.emit('new message', dataToSend);
+            })
         });
-
-        socket.on('disconnect', function () {
-            console.log('user disconnected');
-        });
-    }, 2000)
-    console.log('client connected');
-
-
-
+        once = true;
+    }
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
+        --numUsers;
+    });
 });
-
 
 
 http.listen(4000, function () {

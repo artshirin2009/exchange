@@ -54,6 +54,7 @@
 
 <body>
     <ul id="messages"></ul>
+    <h3 id="userId">5c61445e5fa4443cd8e753f0</h3>
     <form action="">
         <input id="m" autocomplete="off" /><button>Send</button>
     </form>
@@ -65,21 +66,28 @@
             socket.on('history', function (element) {
                 console.log(element.text)
                 $('#messages').append($('<li>').text(element.text));
-            }); 
-
-
+            });
 
             $('form').submit(function (e) {
                 e.preventDefault(); // prevents page reloading
-                socket.emit('send user', $('#m').val());
-                $('#m').val('');
-                return false;
+                socket.emit('send-from-user', {
+                    userId: $('#userId').text(),
+                    messageText: $('#m').val()
+                })
+                    ;
+                // $('#m').val('');
+                // return false;
             });
             socket.on('new message', function (msg) {
-                $('#messages').append($('<li>').text(msg));
-            }); 
+                $('#messages').append($('<li>').text(msg.name));
+                $('#messages').append($('<li>').text(msg.connected));
+                $('#messages').append($('<li>').text(msg.mes));
+                $('#messages').append($('<img>').attr('src', `/uploads/${msg.avatar}`));
+
+
+            });
         });
-      </script>
+    </script>
 </body>
 
 </html>
