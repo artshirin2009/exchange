@@ -44,20 +44,16 @@ app.get('/chat',
     //verifyToken,
     function (req, res, next) {
         Message.find().populate('author')
-        .limit(1)
+        .limit(10)
         // .sort('data')
-        .exec(function (err, data) {
-           
-           var  messages;
-           console.log(data)
-            // lastTenMessages.forEach(element => {
-            //     messages.message = element.message;
-            //     messages.name = element.author;
-            //     //mess
-            // });
-
-            // res.sendFile(__dirname + '/index.html')
-            res.json(data[0].author.name + data[0].author.imagePath)
+        .exec(function (err, data) { 
+            var result = data.map(elem =>  item = {
+                name:elem.author.name,
+                avatar: elem.author.imagePath,
+                message: elem.message
+            })
+            
+            res.json(result)
 
         })
     }); 
@@ -88,7 +84,7 @@ io.on('connection', function (socket) {
                 res.sendStatus(403)
             }
             var newMessage = new Message();
-            newMessage.text = msg.message;
+            newMessage.message = msg.message;
             newMessage.author = msg.userId;
             newMessage.createDate = Date.now();
             newMessage.save();
