@@ -49,18 +49,17 @@
         #messages li:nth-child(odd) {
             background: #eee;
         }
-
-        #messages img {
-            width: 100px;
+        #messages  img {
+            width:100px;
             height: 100px;
         }
     </style>
 </head>
 
 <body>
-    <h2 id='connectedUsers'></h2>
+        <h2 id='connectedUsers'></h2>
     <ul id="messages"></ul>
-    <h3 id="userId">5c5c22e89c9099495f912952</h3>
+    <h3 id="userId">5c6512a87359024f6bbfd16d</h3>
     <form action="">
         <input id="m" autocomplete="off" /><button>Send</button>
     </form>
@@ -69,17 +68,14 @@
     <script>
         $(function () {
             var socket = io();
-            
             socket.on('history', function (msg) {
                 console.log(msg)
                 $('#messages').append($('<li>').text(msg.name));
                 $('#messages').append($('<li>').text(msg.message));
                 $('#messages').append($('<img>').attr('src', `/uploads/${msg.avatar}`));
             });
-            socket.emit('username', "5c5c22e89c9099495f912952");
-            socket.on('user joined', function (result) {
-                console.log('connected')
-                console.log(result)
+            socket.emit('username', "5c6512a87359024f6bbfd16d");
+            socket.on('username-result', function (result) {
                 $('#connectedUsers').text(result)
             })
             $('form').submit(function (e) {
@@ -94,7 +90,6 @@
                 $('#messages').append($('<li>').text(msg.message));
                 $('#messages').append($('<img>').attr('src', `/uploads/${msg.avatar}`));
             });
-
             socket.on('user left', function(data){
                 console.log(data)
                 

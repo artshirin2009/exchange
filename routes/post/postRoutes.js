@@ -17,8 +17,7 @@ module.exports = {
   },
   /**Get post by Id*/
   getPostById: function (req, res, next) {
-    jwt.verify(req.token, 'secretkey', (err, authData) => {
-      if (err) { res.sendStatus(403); }
+    
       var id = req.params.postId
 
       Post.findById({ _id: id }).populate("comments created_user").exec(function (err, post) {
@@ -28,7 +27,7 @@ module.exports = {
           res.json(post);
         }
       });
-    })
+    
   },
   /**Create post */
   createPost: function (req, res, next) {

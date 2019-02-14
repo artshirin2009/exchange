@@ -4,11 +4,11 @@ userFind =
         User.findById({ _id: userId }, function (err, user) {
             if (authData.user.isAdmin) {
                 if (req.body.isAdmin) { user.isAdmin = req.body.isAdmin; }
-                if (req.body.password) { user.password = req.body.password; }
             }
             if (req.file) { user.imagePath = req.file.path.slice(15) }
             if (req.body.email) { user.email = req.body.email; }
             if (req.body.name) { user.name = req.body.name; };
+            if (req.body.password) { user.password = req.body.password; }
             user.save(function (err, user) {
                 if (err) return res.json(err);
                 jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {

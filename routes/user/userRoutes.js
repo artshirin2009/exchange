@@ -33,14 +33,11 @@ module.exports = {
   },
   /**Login users (POST)*/
   login: function (req, res, next) {
-    
     User.findOne({ email: req.body.email }, function (err, user) {
       if (user != undefined) {
-        
         var comparePass = bcrypt.compareSync(req.body.password, user.password)
         if (comparePass) { 
           jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
-            
             res.json({
               user,
               token

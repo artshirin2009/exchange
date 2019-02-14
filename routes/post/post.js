@@ -9,7 +9,7 @@ var routes = require('./postRoutes');
 router.get('/posts', routes.getAllPosts);
 
 /**Get post by Id */
-router.get('/posts/:postId', verifyToken, routes.getPostById);
+router.get('/posts/:postId', routes.getPostById);
 
 /**Create post */
 router.post('/post', verifyToken, multerUpload.single('imageFile'), routes.createPost);

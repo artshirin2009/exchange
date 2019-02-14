@@ -10,7 +10,7 @@ const messageSchema = new Schema({
         type: String
     },
     /**Time to live for the comment 120 sec*/
-    createDate: { type: Date, default: Date.now, expires:'120m'} 
+    createDate: { type: Date, default: Date.now, expires:'20m'} 
 
 });
 
