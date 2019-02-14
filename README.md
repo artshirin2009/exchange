@@ -1,3 +1,5 @@
+https://timeweb.com/ru/community/articles/kak-ustanovit-postgresql-na-ubuntu-18-04-1
+
 # cubex-routes
 
 sudo apt update</br></br>
