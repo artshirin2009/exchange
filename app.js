@@ -51,7 +51,8 @@ app.get('/chat',
                 var result = data.map(elem => item = {
                     name: elem.author.name,
                     avatar: elem.author.imagePath,
-                    message: elem.message
+                    message: elem.message,
+                    created: elem.createDate
                 })
                 history = result;
                 res.json(result)
@@ -67,43 +68,22 @@ app.get('/mychat',
                 var result = data.map(elem => item = {
                     name: elem.author.name,
                     avatar: elem.author.imagePath,
-                    message: elem.message
+                    message: elem.message,
+                    created: elem.createDate
                 })
                 history = result;
+
                 res.sendFile(__dirname + '/index.html')
                 //res.json(lastTenMessages)
             })
 
     });
 
-// app.get('/mychat-2',
-//     //verifyToken,
-//     function (req, res, next) {
-//         Message.find().populate('author')
-//             .limit(5)
-//             .exec(function (err, data) {
-//                 if (err) { res.status(400).json(err) }
-//                 var result = data.map(elem => item = {
-//                     name: elem.author.name,
-//                     avatar: elem.author.imagePath,
-//                     message: elem.message
-//                 })
-//                 history = result;
-//                 res.sendFile(__dirname + '/index-2.html')
-//                 //res.json(lastTenMessages)
-//             })
-
-//     });
 
 let numUsers = 0;
 /**Socket listening */
 io.on('connection', function (socket) {
-
-
-    
-
-    // console.log('client connected');
-     ++numUsers;
+    ++numUsers;
     console.log(`${numUsers} users connected at this moment.`)
     socket.on('username', function (userId) {
 
@@ -114,31 +94,21 @@ io.on('connection', function (socket) {
                 avatar: user.imagePath
             }
             socket.userObj = userObj;
-            connectedUsers.push(userObj)
-            console.log(connectedUsers)
-            socket.emit('username-result', connectedUsers)
-            // if (connectedUsers.length <= 0) {
-            //     connectedUsers.push(userObj)
-            //     console.log('connected users - ')
-            //     console.log(connectedUsers)
-                
-            // }
-            
-            var findArr = connectedUsers.find(item => item.name === userObj.name)
-            if (!findArr) { connectedUsers.push(userObj) 
+            if (connectedUsers.length <= 0) {
+                connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
             }
-            
-            
+            var findArr = connectedUsers.find(item => item.name === userObj.name)
+            if (!findArr) {
+                connectedUsers.push(userObj)
+                socket.emit('username-result', connectedUsers)
+            }
 
-            
+            socket.emit('username-result', connectedUsers);
+            socket.broadcast.emit('username-result', connectedUsers)
         })
-        // setTimeout(() => {
-        //     socket.broadcast.emit('username-result', connectedUsers)
-        // }, 2000);
-
     });
-    
+
     var once = false;
     if (!once) {
         history.forEach(element => {
@@ -162,46 +132,29 @@ io.on('connection', function (socket) {
                 var dataToSend = {
                     name: user.name,
                     avatar: user.imagePath,
-                    message: msg.message
+                    message: msg.message,
+                    created: newMessage.createDate
                 };
                 io.emit('new message', dataToSend);
             })
-
         });
         once = true;
     }
     socket.on('disconnect', function () {
-        var index = connectedUsers.findIndex(function(o){
-            if(socket.userObj){
-               return o.id === socket.userObj.id; 
+        var index = connectedUsers.findIndex(function (o) {
+            if (socket.userObj) {
+                return o.id === socket.userObj.id;
             }
-             else return 0
+            else return 0
         })
         if (index !== -1) connectedUsers.splice(index, 1);
 
-        // echo globally that this client has left
         socket.broadcast.emit('user left', connectedUsers);
-
-        // socket.userObj - User to delete
-        // connectedUsers - Online users
-
-        // console.log(socket.userObj)
-
-
-        
-
-
-
-
-        console.log(connectedUsers)
-
         console.log('user disconnected');
         console.log(' ');
         --numUsers;
         console.log(`${numUsers} users connected at this moment.`)
     });
-
-
 });
 
 
