@@ -59,7 +59,7 @@ io.on('connection', function (socket) {
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
             }
-            var findArr = connectedUsers.find(item => item.id === userObj.id)
+            var findArr = connectedUsers.find(item => item.name === userObj.name)
             if (!findArr) {
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
