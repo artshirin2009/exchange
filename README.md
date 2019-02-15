@@ -1,53 +1,24 @@
-https://timeweb.com/ru/community/articles/kak-ustanovit-postgresql-na-ubuntu-18-04-1
+# Project Title
 
-# cubex-routes
+Cubex Routes (Server)
 
-sudo apt update</br></br>
+### Installing
 
-sudo apt install -y mongodb</br></br>
+What things you need to install the software and how to install them
 
-git clone https://github.com/artshirin2009/cubex-routes.git</br></br>
+```
+sudo apt update
+sudo apt install -y mongodb
+git clone https://github.com/artshirin2009/cubex-routes.git
+npm install
+```
 
-npm install</br></br>
+## Running
 
-Routes:</br>
+```
+npm start
+```
 
-/**Empty route */
-router.get('/', routes.start);
+## Authors
 
-/**Registration */
-router.post('/registration', routes.registration);
-
-/**Login page */
-router.post('/login', routes.login);
-
-/**Get profile page */
-router.get('/get-profile', verifyToken, routes.getProfile);
-
-/**Update profile (+images) */
-router.post('/update-profile',
-    verifyToken,
-    multerUpload.single('imageFile'),
-    routes.updateProfile);
-
-/**Update profiles (only for admin) */
-router.post('/update-profiles',
-    verifyToken,
-    multerUpload.single('imageFile'),
-    routes.updateProfilesForAdmin);
-
-/**Get profile all users (only if isAdmin:true) */
-router.get('/all-users', verifyToken, routes.getAllUsers);
-/**Delete user */
-router.post('/delete', verifyToken, routes.deleteUser);
-
-Post routes</br>
-
-/**All posts */
-router.get('/', routes.getAllPosts);
-
-/**Create post */
-router.post('/create-post', verifyToken,multerUpload.single('imageFile'), routes.createPost);
-
-/**Edit post admin*/
-router.post('/edit-post', verifyToken,multerUpload.single('imageFile'), routes.editPost);
+* **Arthur Shirin** 
