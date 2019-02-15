@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use('/', userPosts);
 app.use('/', userRouter);
 app.use('/', userComments);
-//app.use('/', chatRoutes);
+//app.use('/', chatRoute);
 
 var http = require('http').Server(app);
 
@@ -39,6 +39,7 @@ var Message = require(__dirname + '/models/message');
 var User = require(__dirname + '/models/user');
 var history = [];
 var connectedUsers = [];
+
 
 app.get('/chat',
     //verifyToken,
@@ -57,31 +58,16 @@ app.get('/chat',
                 history = result;
                 res.json(result)
             })
-    });
-app.get('/mychat',
-    //verifyToken,
-    function (req, res, next) {
-        Message.find().populate('author')
-            .limit(5)
-            .exec(function (err, data) {
-                if (err) { res.status(400).json(err) }
-                var result = data.map(elem => item = {
-                    name: elem.author.name,
-                    avatar: elem.author.imagePath,
-                    message: elem.message,
-                    created: elem.createDate
-                })
-                history = result;
+    }
+    
+    
+    );
 
-                res.sendFile(__dirname + '/index.html')
-                //res.json(lastTenMessages)
-            })
-
-    });
+    require('./config/socket');
 
 
-let numUsers = 0;
 /**Socket listening */
+let numUsers = 0;
 io.on('connection', function (socket) {
     ++numUsers;
     console.log(`${numUsers} users connected at this moment.`)

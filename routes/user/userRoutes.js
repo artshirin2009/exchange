@@ -15,6 +15,7 @@ module.exports = {
   registration: function (req, res, next) {
     User.findOne({ email: req.body.email },function (err, user) {
       if (err) res.json(err);
+      
       if (user === null) {
         var user = {
           _id: new mongoose.Types.ObjectId(),
@@ -27,7 +28,8 @@ module.exports = {
           res.json(user);
         });
       } else {
-        res.status(403).json({error:'User with this email already exists'})
+        console.log('fsd')
+        res.status(400).json({error :'User with this email already exists'})
       }
     });
   },

@@ -7,11 +7,5 @@ var path = require('path');
 var userFind = require('../../config/find-users')
 
 // module.exports = {
-//   /**Start test route (GET) */
-//   chat: function (req, res, next) {
-    
-//     res.sendFile('public/index.html'));
-//     console.log('there');
-//     next();
-//   },
+//   chat: 
 // }
