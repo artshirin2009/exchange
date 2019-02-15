@@ -10,11 +10,11 @@ var verifyToken = require(__dirname + '/config/verifyToken');
 var userRouter = require('./routes/user/user');
 var userPosts = require('./routes/post/post');
 var userComments = require('./routes/comment/comment');
-//var chatRoutes = require('./routes/chat/chat');
+var chatRoutes = require('./routes/chat/chat');
 
 require('./config/database');
 
-var app = express();
+var app = express();  /**1 */
 
 app.set('secretKey', 'nodeRestApi'); // jwt secret token
 app.use(cors())
@@ -27,47 +27,22 @@ app.use(express.static(path.join(__dirname, 'uploads')));
 app.use('/', userPosts);
 app.use('/', userRouter);
 app.use('/', userComments);
-//app.use('/', chatRoute);
+app.use('/', chatRoutes);
 
-var http = require('http').Server(app);
+var http = require('http').Server(app); /**2 */
+
+
 
 /**Socket io */
-var io = require('socket.io')(http);
-
-
+var io = require('socket.io')(http); /*3*/
 var Message = require(__dirname + '/models/message');
 var User = require(__dirname + '/models/user');
 var history = [];
 var connectedUsers = [];
-
-
-app.get('/chat',
-    //verifyToken,
-    function (req, res, next) {
-        Message.find().populate('author')
-            .limit(10)
-            .sort('-createDate')
-            .exec(function (err, data) {
-                if (err) { res.status(400).json(err) }
-                var result = data.map(elem => item = {
-                    name: elem.author.name,
-                    avatar: elem.author.imagePath,
-                    message: elem.message,
-                    created: elem.createDate
-                })
-                history = result;
-                res.json(result)
-            })
-    }
-    
-    
-    );
-
-    require('./config/socket');
-
-
 /**Socket listening */
 let numUsers = 0;
+
+//require('./config/socket');
 io.on('connection', function (socket) {
     ++numUsers;
     console.log(`${numUsers} users connected at this moment.`)
@@ -84,7 +59,7 @@ io.on('connection', function (socket) {
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
             }
-            var findArr = connectedUsers.find(item => item.name === userObj.name)
+            var findArr = connectedUsers.find(item => item.id === userObj.id)
             if (!findArr) {
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
