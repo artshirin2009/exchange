@@ -17,6 +17,7 @@ module.exports = {
       if (err) res.json(err);
       
       if (user === null) {
+        
         var user = {
           _id: new mongoose.Types.ObjectId(),
           email: req.body.email,
@@ -28,8 +29,10 @@ module.exports = {
           res.json(user);
         });
       } else {
+        var errors = {}
         console.log('fsd')
-        res.status(400).json({error :'User with this email already exists'})
+        errors.email = 'User with this email already exists'
+        res.status(400).json({errors})
       }
     });
   },
