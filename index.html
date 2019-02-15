@@ -60,23 +60,33 @@
 <body>
     <h2 id='connectedUsers'></h2>
     <ul id="messages"></ul>
-    <h3 id="userId">5c5c22e89c9099495f912952</h3>
+    <h3 id="userId">5c66bc67aa83957f73e95f4e</h3>
+    <input type="file" id="siofu_input" />
     <form action="">
         <input id="m" autocomplete="off" /><button>Send</button>
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         $(function () {
-            var socket = io();
-            
+            var socket = io.connect();
+            var uploader = new SocketIOFileUpload(socket);
+            uploader.listenOnInput(document.getElementById("siofu_input"));
+
             socket.on('history', function (msg) {
                 console.log(msg)
                 $('#messages').append($('<li>').text(msg.name));
                 $('#messages').append($('<li>').text(msg.message));
                 $('#messages').append($('<img>').attr('src', `/uploads/${msg.avatar}`));
             });
-            socket.emit('username', "5c5c22e89c9099495f912952");
+            socket.emit('username', "5c66bc67aa83957f73e95f4e");
+
+
+            socket.emit('ferret', 'tobi', 'woot', function (data) { // args are sent in order to acknowledgement function
+                console.log(data); // data will be 'tobi says woot'
+            });
+
             socket.on('user joined', function (result) {
                 console.log('connected')
                 console.log(result)
@@ -95,7 +105,7 @@
                 $('#messages').append($('<img>').attr('src', `/uploads/${msg.avatar}`));
             });
 
-            socket.on('user left', function(data){
+            socket.on('user left', function (data) {
                 console.log(data)
             })
         });

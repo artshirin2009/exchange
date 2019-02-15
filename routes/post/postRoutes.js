@@ -20,15 +20,37 @@ module.exports = {
     
       var id = req.params.postId
 
-      Post.findById({ _id: id }).populate("comments created_user").exec(function (err, post) {
+      Post.findById({ _id: id })
+      .populate({ 
+        path: 'comments',
+        populate: {
+          path: 'author',
+          model: 'User'
+        }
+     })
+     .populate(
+       {
+        path: 'created_user',
+        model: 'User'
+       }
+     )
+     
+     .exec(function (err, post) {
         if (err) {
           console.log(err);
         } else {
+          
           res.json(post);
         }
       });
     
   },
+
+
+
+
+
+
   /**Create post */
   createPost: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {

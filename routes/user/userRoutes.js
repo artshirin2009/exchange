@@ -25,17 +25,10 @@ module.exports = {
           name: req.body.name
         };
 
-const saltRounds = 10;
+        const saltRounds = 10;
         user.password = bcrypt.hashSync(user.password, saltRounds)
 
         var newUser = new User(user);
-
-
-        
-
-        console.log('hashed password')
-        console.log(user.password)
-
         newUser.save(function (err, user) {
           res.json(user);
         });
@@ -53,8 +46,6 @@ const saltRounds = 10;
     User.findOne({ email: req.body.email }, function (err, user) {
       if (user != undefined) {
         var comparePass = bcrypt.compareSync(req.body.password, user.password)
-        console.log('user.password')
-        console.log(user.password)
         if (comparePass) {
           jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
             res.json({
@@ -68,11 +59,8 @@ const saltRounds = 10;
           errors.password = 'Wrong password.'
           res.status(400).json({ errors })
         }
-
-
       }
       else {
-
         res.json(err)
       }
     });
@@ -90,9 +78,7 @@ const saltRounds = 10;
   /**Update profile (+images) (PUT)*/
   updateProfile: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
-      console.log(authData)
       if (err) {
-        console.log(err)
         res.status(403);
       } else {
         var userId = req.params.userId;
@@ -102,7 +88,6 @@ const saltRounds = 10;
         else if (!authData.user.isAdmin) {
           if (userId === authData.user._id) {
             userFind(req, res, User, userId, authData);
-
           }
           else { res.status(403).json('You can edit only your account') }
         }

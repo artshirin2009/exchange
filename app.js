@@ -44,11 +44,18 @@ let numUsers = 0;
 
 var chat = require('./config/chat')
 
+
+app.get('/my-chat', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+  });
+
+
 io.on('connection',
 
 //chat
 
 function (socket) {
+    
     ++numUsers;
     console.log(`${numUsers} users connected at this moment.`)
     socket.on('username', function (userId) {
@@ -60,14 +67,11 @@ function (socket) {
             }
             socket.userObj = userObj;
             if (connectedUsers.length < 0) {
-                console.log('there-1')
-                console.log(connectedUsers.length)
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
             }
             var findArr = connectedUsers.find(item => item.name === userObj.name)
             if (!findArr) {
-                console.log('there-2')
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
                 socket.broadcast.emit('username-result', connectedUsers)
@@ -83,6 +87,9 @@ function (socket) {
         history.forEach(element => {
             socket.emit('history', element)
         });
+
+        // socket.on()
+
         socket.on('send-from-user', function (msg) {
             if (!typeof msg === Object) {
                 res.sendStatus(403)
@@ -109,6 +116,12 @@ function (socket) {
         });
         once = true;
     }
+
+
+
+
+
+
     socket.on('disconnect', function () {
         var index = connectedUsers.findIndex(function (o) {
             if (socket.userObj) {
