@@ -33,7 +33,7 @@ var http = require('http').Server(app); /**2 */
 
 
 
-/**Socket io */
+// /**Socket io */
 var io = require('socket.io')(http); /*3*/
 var Message = require(__dirname + '/models/message');
 var User = require(__dirname + '/models/user');
@@ -42,12 +42,16 @@ var connectedUsers = [];
 /**Socket listening */
 let numUsers = 0;
 
-//require('./config/socket');
-io.on('connection', function (socket) {
+var chat = require('./config/chat')
+
+io.on('connection',
+
+//chat
+
+function (socket) {
     ++numUsers;
     console.log(`${numUsers} users connected at this moment.`)
     socket.on('username', function (userId) {
-
         User.findOne({ _id: userId }, function (err, user) {
             var userObj = {
                 id: user._id,
@@ -55,14 +59,18 @@ io.on('connection', function (socket) {
                 avatar: user.imagePath
             }
             socket.userObj = userObj;
-            if (connectedUsers.length <= 0) {
+            if (connectedUsers.length < 0) {
+                console.log('there-1')
+                console.log(connectedUsers.length)
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
             }
             var findArr = connectedUsers.find(item => item.name === userObj.name)
             if (!findArr) {
+                console.log('there-2')
                 connectedUsers.push(userObj)
                 socket.emit('username-result', connectedUsers)
+                socket.broadcast.emit('username-result', connectedUsers)
             }
 
             socket.emit('username-result', connectedUsers);
@@ -116,7 +124,23 @@ io.on('connection', function (socket) {
         --numUsers;
         console.log(`${numUsers} users connected at this moment.`)
     });
-});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+);
 
 
 http.listen(4000, function () {

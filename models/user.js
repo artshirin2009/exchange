@@ -37,9 +37,9 @@ userSchema.methods.toJSON = function() {
 
 
 // hash user password before saving into database
-userSchema.pre('save', function(next) {
-  this.password = bcrypt.hashSync(this.password, saltRounds);
-  next();
-});
+// userSchema.pre('save', function(next) {
+//   this.password = bcrypt.hashSync(this.password, saltRounds);
+//   next();
+// });
 
 module.exports = mongoose.model('User', userSchema);

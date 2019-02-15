@@ -13,26 +13,38 @@ module.exports = {
   },
   /**Registration users (POST)*/
   registration: function (req, res, next) {
-    User.findOne({ email: req.body.email },function (err, user) {
+    User.findOne({ email: req.body.email }, function (err, user) {
       if (err) res.json(err);
-      
+
       if (user === null) {
-        
+
         var user = {
           _id: new mongoose.Types.ObjectId(),
           email: req.body.email,
           password: req.body.password,
           name: req.body.name
         };
+
+const saltRounds = 10;
+        user.password = bcrypt.hashSync(user.password, saltRounds)
+
         var newUser = new User(user);
+
+
+        
+
+        console.log('hashed password')
+        console.log(user.password)
+
         newUser.save(function (err, user) {
           res.json(user);
         });
+
       } else {
         var errors = {}
-        console.log('fsd')
+
         errors.email = 'User with this email already exists'
-        res.status(400).json({errors})
+        res.status(400).json({ errors })
       }
     });
   },
@@ -41,7 +53,9 @@ module.exports = {
     User.findOne({ email: req.body.email }, function (err, user) {
       if (user != undefined) {
         var comparePass = bcrypt.compareSync(req.body.password, user.password)
-        if (comparePass) { 
+        console.log('user.password')
+        console.log(user.password)
+        if (comparePass) {
           jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
             res.json({
               user,
@@ -50,12 +64,15 @@ module.exports = {
           });
         }
         else {
-          
-          res.sendStatus(403);
+          var errors = {}
+          errors.password = 'Wrong password.'
+          res.status(400).json({ errors })
         }
+
+
       }
       else {
-        
+
         res.json(err)
       }
     });
@@ -73,8 +90,10 @@ module.exports = {
   /**Update profile (+images) (PUT)*/
   updateProfile: function (req, res, next) {
     jwt.verify(req.token, 'secretkey', (err, authData) => {
+      console.log(authData)
       if (err) {
-        res.sendStatus(403);
+        console.log(err)
+        res.status(403);
       } else {
         var userId = req.params.userId;
         if (authData.user.isAdmin) {
@@ -83,6 +102,7 @@ module.exports = {
         else if (!authData.user.isAdmin) {
           if (userId === authData.user._id) {
             userFind(req, res, User, userId, authData);
+
           }
           else { res.status(403).json('You can edit only your account') }
         }
@@ -117,7 +137,7 @@ module.exports = {
       } else {
         if (authData.user.isAdmin) {
           var userId = req.params.userId;
-          User.deleteOne({ _id: userId }, function (err, doc) { res.json({message:'User deleted by admin'}) })
+          User.deleteOne({ _id: userId }, function (err, doc) { res.json({ message: 'User deleted by admin' }) })
         }
         else {
           var userId = req.params.userId;
@@ -126,10 +146,10 @@ module.exports = {
             if (user._id == authData.user._id) {
               user.remove(function (err, user) {
                 if (err) return res.json(err);
-                res.json({message:'User successfully deleted'});
+                res.json({ message: 'User successfully deleted' });
               });
             }
-            else {res.status(403).json('You can delete only your account') }
+            else { res.status(403).json('You can delete only your account') }
           })
         }
       }
