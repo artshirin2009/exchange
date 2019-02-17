@@ -43,27 +43,27 @@ module.exports = {
   },
   /**Login users (POST)*/
   login: function (req, res, next) {
-    User.findOne({ email: req.body.email }, function (err, user) {
-      if (user != undefined) {
+    User.findOne({ email: req.body.email })
+    .then(user => { if (user != undefined) return user})
+    .then(user => {
         var comparePass = bcrypt.compareSync(req.body.password, user.password)
-        if (comparePass) {
-          jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+         return new Promise(
+          function(resolve, reject){
+            var errors = {}
+            errors.password = 'Wrong password.'
+            comparePass ? resolve(user) : reject(errors)
+          }
+        )
+    })
+    .then(function(user){
+      jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
             res.json({
               user,
               token
             });
           });
-        }
-        else {
-          var errors = {}
-          errors.password = 'Wrong password.'
-          res.status(400).json({ errors })
-        }
-      }
-      else {
-        res.json(err)
-      }
-    });
+    })
+    .catch(errors=>res.status(400).json({ errors }))
   },
   /**User profile (GET)*/
   getProfile: function (req, res) {
