@@ -8,3 +8,5 @@ module.exports = mongoose.connect(
 )
   .then(() => console.log('Successfully connected to db'))
   .catch(err => console.log(err))
+
+  
